@@ -1,46 +1,24 @@
-# *__TODO:__ Insert project name*
+# Statiq Extensions
 
-*This repository serves as template for new repositories.*
-*After creating a new repo from the template, adjust the following files (entries that need to be replaced are marked as **TODO**):*
+Extension/custom modules for [Statiq.Framework](https://statiq.dev/framework/)
 
-- *Update the NuGet packaging settings in `src\Directory.Build.props` (Properties marked as **TODO**)*
-- *Adjust settings for CI builds in `azure-pipelines.yml`*
-- *Ensure the .NET Core SDK specified in `global.json` is the version that should be used for the new repo*
-- *Insert year and name into `LICENSE`*
-- *Adjust the version in `version.json`*
-- *Adjust the following sections in this README file*
-- *Remove this section from this README file*
-
-## Overview
-
-*__TODO:__ Add status badges for package(s) on NuGet.org (and MyGet), build status badge for Azure Pipeline*
-
-## Installation
-
-*__TODO:__ PACKAGENAME* is distributed as NuGet package.
-
-- Prerelease builds are available on [MyGet](https://example.com) **TODO:** Provide package urls
-- Release versions are available on [NuGet.org](https://example.com) **TODO:** Provide package urls
+⚠ Very much a work-in-progress
 
 ## Building from source
 
-*__TODO:__ Provide info on how to build the project, e.g.*
-
 ```bat
-  dotnet restore .\src\PROJECTNAME.sln
+  dotnet restore .\src\Extensions.Statiq.sln
 
-  dotnet build .\src\PROJECTNAME.sln
+  dotnet build .\src\Extensions.Statiq.sln
 
-  dotnet pack .\src\PROJECTNAME.sln
+  dotnet pack .\src\Extensions.Statiq.sln
 ```
 
 ## Acknowledgments
 
-*__TODO:__ Provide info about libraries used in this project*
+Built on [Statiq.Framework](https://statiq.dev/framework/)
 
 ## Versioning and Branching
-
-*__TODO:__ Adjust versioning section if necessary*
 
 The version of this library is automatically derived from git and the information
 in `version.json` using [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning):

@@ -34,20 +34,19 @@ variables:
   # Build settings
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE : true    # do not populate NuGet caches on build agents (VM will be deleted afterwards anyways)
   configuration: Release                      # the configuration (Debug/Release) to build
-  solutionPath : src/PROJECTNAME.sln          # The path of the solution to be built
+  solutionPath : src/Extensions.Statiq.sln    # The path of the solution to be built
   artifactsName_Binaries: Binaries
   artifactsName_ChangeLog: ChangeLog
 
   # MyGet.org settings   
-  myget_ServiceConnectionName: 'TODO'                 # the name of the Azure DevOps service connection to use for MyGet.org
+  myget_ServiceConnectionName: 'MyGet - ap0llo-extensions-statiq'   # the name of the Azure DevOps service connection to use for MyGet.org
 
   # NuGet.org settings
-  nuget_org_ServiceConnectionName: 'TODO'             # the name of the Azure DevOps service connection to use for NuGet.org
-  nuget_org_PackageName: 'TODO'                       # the name of the package being published
-
+  nuget_org_ServiceConnectionName: 'NuGet.org - extensions-statiq'  # the name of the Azure DevOps service connection to use for NuGet.org
+  
   # GitHub settings
-  github_ServiceConnectionName: 'TODO'                # the name of the Azure DevOps service connection to use for creating GitHub releases
-  github_repositoryName: 'TODO'                       # the name of the github repo to create the release in
+  github_ServiceConnectionName: 'GitHub: ap0llo'                    # the name of the Azure DevOps service connection to use for creating GitHub releases
+  github_repositoryName: 'ap0llo/extensions-statiq'                 # the name of the github repo to create the release in
 
 jobs:
 

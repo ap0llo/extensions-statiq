@@ -47,12 +47,11 @@
 
 	<!--NuGet package properties -->
 	<PropertyGroup>
-		<Authors>TODO</Authors>
-		<PackageProjectUrl>TODO</PackageProjectUrl>
-		<PackageLicenseUrl>TODO</PackageLicenseUrl>
-		<Description>TODO</Description>
-		<Copyright>TODO</Copyright>
-		<PackageTags>TODO</PackageTags>
+		<Authors>Andreas Gruenwald</Authors>
+		<PackageProjectUrl>https://github.com/ap0llo/extensions-statiq</PackageProjectUrl>		
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>Extension/custom modules for Statiq.Framework</Description>
+		<Copyright>Copyright (c) 2020, Andreas Gruenwald</Copyright>
 	</PropertyGroup>
 
 

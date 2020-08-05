@@ -1,10 +1,10 @@
-﻿using System;
+﻿// Note: Adapted from https://github.com/ap0llo/changelog/blob/9c789d570199480801ea95d57f425b425b5f1964/src/ChangeLog/Git/GitId.cs    
+
+using System;
 using System.Text.RegularExpressions;
 
 namespace Grynwald.Extensions.Statiq.Git.Internal
 {
-    // Copied from https://github.com/ap0llo/changelog/blob/9c789d570199480801ea95d57f425b425b5f1964/src/ChangeLog/Git/GitId.cs
-    // TODO: Add tests
     public struct GitId : IEquatable<GitId>
     {
         private static readonly Regex s_ObjectIdRegex = new Regex(@"^[\dA-z]+$", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);

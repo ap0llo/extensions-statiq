@@ -5,13 +5,14 @@ using LibGit2Sharp;
 
 namespace Grynwald.Extensions.Statiq.Git.Internal
 {
-    public class LocalGitRepository : GitRepository
+    public class LocalGitRepository : IGitRepository
     {
         private readonly string m_RepositoryPath;
 
-        public override RepositoryKind Kind => RepositoryKind.Local;
 
-        public override IEnumerable<string> Branches
+        public RepositoryKind Kind => RepositoryKind.Local;
+
+        public IEnumerable<string> Branches
         {
             get
             {
@@ -37,7 +38,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
-        private Repository OpenRepository() => new Repository(m_RepositoryPath);
+        public void Dispose()
+        { }
 
+
+        private Repository OpenRepository() => new Repository(m_RepositoryPath);
     }
 }

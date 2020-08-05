@@ -3,18 +3,10 @@ using System.Collections.Generic;
 
 namespace Grynwald.Extensions.Statiq.Git.Internal
 {
-    public abstract class GitRepository : IDisposable
+    public static class GitRepositoryFactory
     {
-        public abstract RepositoryKind Kind { get; }
 
-        public abstract IEnumerable<string> Branches { get; }
-
-
-        public virtual void Dispose()
-        { }
-
-
-        public static GitRepository Create(string repositoryUrl)
+        public static IGitRepository GetRepository(string repositoryUrl)
         {
             //TODO: remoteUrl must not be null or whitespace
 

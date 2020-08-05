@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Grynwald.Extensions.Statiq.Git.Internal
 {
     public static class GitRepositoryFactory
     {
-
         public static IGitRepository GetRepository(string repositoryUrl)
         {
             //TODO: remoteUrl must not be null or whitespace

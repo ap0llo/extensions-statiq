@@ -9,6 +9,6 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
         IEnumerable<string> Branches { get; }
 
-        IEnumerable<GitFile> GetFiles(string branch);
+        IReadOnlyList<GitFile> GetFiles(string branch);
     }
 }

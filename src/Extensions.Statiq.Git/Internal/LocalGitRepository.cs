@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 
@@ -38,7 +39,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
 
 
-        public IEnumerable<GitFile> GetFiles(string branch)
+        public IReadOnlyList<GitFile> GetFiles(string branch)
         {
             using var repository = OpenRepository();
 
@@ -51,10 +52,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         public void Dispose()
         { }
 
-        public string GetFileContent(ObjectId id)
+        public Stream GetFileContentStream(ObjectId id)
         {
             using var repo = OpenRepository();
-            return repo.Lookup<Blob>(id).GetContentText();
+            return repo.Lookup<Blob>(id).GetContentStream();
         }
 
 

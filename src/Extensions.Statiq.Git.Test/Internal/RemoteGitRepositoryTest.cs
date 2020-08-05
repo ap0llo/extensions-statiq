@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Grynwald.Extensions.Statiq.Git.Test.Internal
 {
     [TestFixture]
-    public class RemoteGitRepositoryTest : GitRepositoryTestBase
+    public class RemoteGitRepositoryTest : GitRepositoryTest
     {
         protected override IGitRepository CreateInstance(string repositoryUrl) => new RemoteGitRepository(repositoryUrl);
 

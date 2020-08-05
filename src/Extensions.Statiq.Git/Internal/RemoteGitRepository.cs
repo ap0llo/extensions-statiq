@@ -66,7 +66,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
-        public IEnumerable<GitFile> GetFiles(string branch) => LocalRepository.GetFiles(branch);
+        public IReadOnlyList<GitFile> GetFiles(string branch) => LocalRepository.GetFiles(branch);
 
         public void Dispose()
         {

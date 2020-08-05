@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using LibGit2Sharp;
 
 namespace Grynwald.Extensions.Statiq.Git.Internal
@@ -13,8 +14,6 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
         public string Commit { get; }
 
-        public string Content => m_Repository.GetFileContent(m_Id);
-
 
         internal GitFile(LocalGitRepository repository, string commit, string path, ObjectId id)
         {
@@ -28,5 +27,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             Path = path;
             m_Id = id ?? throw new ArgumentNullException(nameof(id));
         }
+
+
+        public Stream GetContentStream() => m_Repository.GetFileContentStream(m_Id);
     }
 }

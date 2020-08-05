@@ -69,7 +69,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             );
         }
 
-        public override DirectoryInfoBase GetDirectory(string path)
+        public override DirectoryInfoBase? GetDirectory(string path)
         {
             var (name, remainingPath) = SplitPath(path);
 
@@ -86,10 +86,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
             }
 
-            throw new DirectoryNotFoundException();
+            return null;
         }
 
-        public override FileInfoBase GetFile(string path)
+        public override FileInfoBase? GetFile(string path)
         {
             var (name, remainingPath) = SplitPath(path);
 
@@ -99,17 +99,13 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
                 {
                     return file;
                 }
-                else
-                {
-
-                }
             }
             else if (m_Directories.Value.TryGetValue(name, out var dir))
             {
                 return dir.GetFile(remainingPath);
             }
 
-            throw new FileNotFoundException();
+            return null;
         }
 
 

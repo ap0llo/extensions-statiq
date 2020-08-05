@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using LibGit2Sharp;
@@ -157,17 +156,17 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         [TestCase("dir1")]
         [TestCase("dir2/dir3")]
         [TestCase("dir2\\dir3")]
-        public void GetDirectory_throws_DirectoryNotFoundException_for_unknown_directory(string path)
+        public void GetDirectory_returns_if_directory_does_not_exist(string path)
         {
             // ARRANGE            
             using var repository = new Repository(m_WorkingDirectory);
+            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
 
             // ACT
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
-            Action act = () => sut.GetDirectory(path);
+            var dir = sut.GetDirectory(path);
 
             // ASSERT
-            act.Should().Throw<DirectoryNotFoundException>();
+            dir.Should().BeNull();
         }
 
         [TestCase("file1.txt", "file1.txt", "file1.txt")]
@@ -215,17 +214,17 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         [TestCase("dir2\\dir3/file4.txt")]
         [TestCase("dir2/dir3\\file4.txt")]
         [TestCase("dir2\\dir3\\file4.txt")]
-        public void GetFile_throws_FileNotFoundException_for_unknown_directory(string path)
+        public void GetFile_returns_null_if_file_does_not_exist(string path)
         {
             // ARRANGE            
             using var repository = new Repository(m_WorkingDirectory);
+            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
 
             // ACT
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
-            Action act = () => sut.GetFile(path);
+            var file = sut.GetFile(path);
 
             // ASSERT
-            act.Should().Throw<FileNotFoundException>();
+            file.Should().BeNull();
         }
     }
 }

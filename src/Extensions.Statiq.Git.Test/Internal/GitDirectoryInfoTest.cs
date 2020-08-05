@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using LibGit2Sharp;
@@ -60,7 +58,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         [Test]
         public void Constructor_throws_ArgumentException_if_tree_of_root_directory_is_null()
         {
-            Action act = () => new GitDirectoryInfo((Tree)null!);
+            Action act = () => new GitDirectoryInfo(null!);
             act.Should().Throw<ArgumentNullException>();
         }
 

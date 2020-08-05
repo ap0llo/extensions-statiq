@@ -49,14 +49,16 @@ namespace Grynwald.Extensions.Statiq.Git
             var outputs = new List<IDocument>();
             foreach (var branchName in matchingBranches)
             {
-                var branchOutputs = repository.GetFiles(branchName).Select(file =>
+                var commitId = repository.GetHeadCommitId(branchName);
+
+                var branchOutputs = repository.GetRootDirectory(commitId).EnumerateFilesRescursively().Select(file =>
                 {
                     var metadata = new Dictionary<string, object>()
                     {
                         { GitKeys.GitRepositoryUrl, repositoryUrl },
                         { GitKeys.GitBranch, branchName },
-                        { GitKeys.GitCommit, file.Commit },
-                        { GitKeys.GitRelativePath, file.Path },
+                        { GitKeys.GitCommit, commitId.ToString() },
+                        { GitKeys.GitRelativePath, file.FullName },
                     };
 
                     using var stream = file.GetContentStream();

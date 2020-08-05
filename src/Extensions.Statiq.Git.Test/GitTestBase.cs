@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using Grynwald.Extensions.Statiq.Git.Internal;
 using Grynwald.Utilities.IO;
 using NUnit.Framework;
 
@@ -31,14 +32,14 @@ namespace Grynwald.Extensions.Statiq.Git.Test
 
         protected void GitAdd(string path = ".") => Git($@"add ""{path}""");
 
-        protected string GitCommit(string message = "Commit", bool allowEmtpy = false)
+        protected GitId GitCommit(string message = "Commit", bool allowEmtpy = false)
         {
             Git($@"commit -m ""{message}"" {(allowEmtpy ? "--allow-empty" : "")} ");
 
             Git("rev-parse --short HEAD", out var commitId);
             commitId = commitId.Trim();
 
-            return commitId;
+            return new GitId(commitId);
         }
 
         protected void Git(string command) => Git(command, out _, out _);

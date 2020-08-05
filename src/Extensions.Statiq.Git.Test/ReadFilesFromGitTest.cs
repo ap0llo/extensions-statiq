@@ -37,7 +37,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Value.Should().Be("master");
             output
                 .Should().Contain(x => x.Key == GitKeys.GitCommit)
-                .Which.Value.Should().Be(commitId);
+                .Which.Value
+                    .Should().BeAssignableTo<string>()
+                    .And.Be(commitId.Id);
             output
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
                 .Which.Value.Should().Be("file1.txt");
@@ -81,7 +83,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Value.Should().Be("master");
             output1
                 .Should().Contain(x => x.Key == GitKeys.GitCommit)
-                .Which.Value.Should().Be(commit1);
+                .Which.Value
+                    .Should().BeAssignableTo<string>()
+                    .And.Be(commit1.Id);
             output1
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
                 .Which.Value.Should().Be("file1.txt");
@@ -94,7 +98,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Value.Should().Be("branch2");
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitCommit)
-                .Which.Value.Should().Be(commit2);
+                .Which.Value
+                    .Should().BeAssignableTo<string>()
+                    .And.Be(commit2.Id);
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
                 .Which.Value.Should().Be("file2.txt");

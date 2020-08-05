@@ -29,9 +29,9 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         public override DirectoryInfoBase? ParentDirectory => m_Parent;
 
 
-        private IReadOnlyDictionary<string, GitDirectoryInfo> Directories => m_Directories.Value;
+        public IEnumerable<GitDirectoryInfo> Directories => m_Directories.Value.Values;
 
-        private IReadOnlyDictionary<string, GitFileInfo> Files => m_Files.Value;
+        public IEnumerable<GitFileInfo> Files => m_Files.Value.Values;
 
 
         public GitDirectoryInfo(Tree tree)
@@ -64,8 +64,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
         {
             return Enumerable.Concat(
-                Directories.Values.Cast<FileSystemInfoBase>(),
-                Files.Values.Cast<FileSystemInfoBase>()
+                Directories.Cast<FileSystemInfoBase>(),
+                Files.Cast<FileSystemInfoBase>()
             );
         }
 
@@ -73,7 +73,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         {
             var (name, remainingPath) = SplitPath(path);
 
-            if (Directories.TryGetValue(name, out var dir))
+            if (m_Directories.Value.TryGetValue(name, out var dir))
             {
                 if (String.IsNullOrEmpty(remainingPath))
                 {
@@ -95,7 +95,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
             if (String.IsNullOrEmpty(remainingPath))
             {
-                if (Files.TryGetValue(name, out var file))
+                if (m_Files.Value.TryGetValue(name, out var file))
                 {
                     return file;
                 }
@@ -104,7 +104,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
                 }
             }
-            else if (Directories.TryGetValue(name, out var dir))
+            else if (m_Directories.Value.TryGetValue(name, out var dir))
             {
                 return dir.GetFile(remainingPath);
             }
@@ -134,9 +134,9 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
             foreach (var item in m_Tree)
             {
-                if (item.Target is Blob)
+                if (item.Target is Blob blob)
                 {
-                    var file = new GitFileInfo(item.Name, this);
+                    var file = new GitFileInfo(item.Name, this, blob);
                     files.Add(item.Name, file);
                 }
             }

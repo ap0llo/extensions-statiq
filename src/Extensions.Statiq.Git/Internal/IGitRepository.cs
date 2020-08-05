@@ -9,6 +9,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
         IEnumerable<string> Branches { get; }
 
-        IReadOnlyList<GitFile> GetFiles(string branch);
+        GitId GetHeadCommitId(string branchName);
+
+        GitDirectoryInfo GetRootDirectory(GitId commit);
     }
 }

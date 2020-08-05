@@ -9,6 +9,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
     public class LocalGitRepository : IGitRepository
     {
         private readonly string m_RepositoryPath;
+        private Lazy<Repository> m_Repository;
+
+
+        private Repository Repository => m_Repository.Value;
 
 
         public RepositoryKind Kind => RepositoryKind.Local;
@@ -17,9 +21,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         {
             get
             {
-                using var repository = OpenRepository();
-
-                var branches = repository.Branches
+                var branches = Repository.Branches
                     .Select(x => x.CanonicalName)
                     .Where(x => x.StartsWith("refs/heads/"))
                     .Select(x => x.Remove(0, "refs/heads/".Length))
@@ -29,54 +31,36 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             }
         }
 
+
         public LocalGitRepository(string repositoryPath)
         {
             if (String.IsNullOrWhiteSpace(repositoryPath))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(repositoryPath));
 
             m_RepositoryPath = repositoryPath;
+            m_Repository = new Lazy<Repository>(() => new Repository(m_RepositoryPath));
         }
 
 
-
-        public IReadOnlyList<GitFile> GetFiles(string branch)
+        public GitId GetHeadCommitId(string branchName)
         {
-            using var repository = OpenRepository();
+            var commit = Repository.Branches[branchName].Tip;
+            var id = Repository.ObjectDatabase.ShortenObjectId(commit);
+            return new GitId(id);
+        }
 
-            var commit = repository.Branches[branch].Tip;
-            var commitId = repository.ObjectDatabase.ShortenObjectId(commit);
-            return EnumerateFiles(commitId, commit.Tree).ToArray();
-
+        public GitDirectoryInfo GetRootDirectory(GitId commitId)
+        {
+            var commit = Repository.Lookup<Commit>(commitId.Id);
+            return new GitDirectoryInfo(commit.Tree);
         }
 
         public void Dispose()
-        { }
-
-        public Stream GetFileContentStream(ObjectId id)
         {
-            using var repo = OpenRepository();
-            return repo.Lookup<Blob>(id).GetContentStream();
+            if (m_Repository.IsValueCreated)
+                m_Repository.Value.Dispose();
         }
 
 
-        private Repository OpenRepository() => new Repository(m_RepositoryPath);
-
-        private IEnumerable<GitFile> EnumerateFiles(string commitId, Tree tree)
-        {
-            foreach (var item in tree)
-            {
-                if (item.Target is Tree subtree)
-                {
-                    foreach (var file in EnumerateFiles(commitId, subtree))
-                    {
-                        yield return file;
-                    }
-                }
-                else if (item.Target is Blob)
-                {
-                    yield return new GitFile(this, commitId, item.Path, item.Target.Id);
-                }
-            }
-        }
     }
 }

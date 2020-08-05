@@ -66,12 +66,15 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
-        public IReadOnlyList<GitFile> GetFiles(string branch) => LocalRepository.GetFiles(branch);
+        public GitId GetHeadCommitId(string branchName) => LocalRepository.GetHeadCommitId(branchName);
+
+        public GitDirectoryInfo GetRootDirectory(GitId commitId) => LocalRepository.GetRootDirectory(commitId);
 
         public void Dispose()
         {
             m_LocalRepository?.Dispose();
             m_RepositoryDirectory?.Dispose();
         }
+
     }
 }

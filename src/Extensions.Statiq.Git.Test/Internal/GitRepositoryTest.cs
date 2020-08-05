@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace Grynwald.Extensions.Statiq.Git.Test.Internal
 {
-
     /// <summary>
     /// Base test class for implementations of <see cref="IGitRepository"/>
     /// </summary>
@@ -42,6 +41,36 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         }
 
         [Test]
+        public void GetHeadCommitId_returns_expected_Commit_for_default_branch()
+        {
+            // ARRANGE            
+            var commitId = GitCommit(allowEmtpy: true);
+            using var sut = CreateInstance(m_WorkingDirectory);
+
+            // ACT
+            var headCommit = sut.GetHeadCommitId("master");
+
+            // ASSERT
+            headCommit.Should().Be(commitId);
+        }
+
+
+        [Test]
+        public void GetHeadCommitId_returns_expected_Commit()
+        {
+            // ARRANGE
+            Git("checkout -b some-other-branch");
+            var commitId = GitCommit(allowEmtpy: true);
+            using var sut = CreateInstance(m_WorkingDirectory);
+
+            // ACT
+            var headCommit = sut.GetHeadCommitId("some-other-branch");
+
+            // ASSERT
+            headCommit.Should().Be(commitId);
+        }
+
+        [Test]
         public void Files_returns_expected_files()
         {
             // ARRANGE
@@ -51,20 +80,19 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             CreateFile("directory2/DIRECTORY3/file4.txt");
 
             GitAdd();
-            var commitId = GitCommit();
+            var commit = GitCommit();
 
             // ACT
             using var sut = CreateInstance(m_WorkingDirectory);
-            var files = sut.GetFiles("master").ToList();
+            var files = sut.GetRootDirectory(commit).EnumerateFilesRescursively().ToList();
 
             // ASSERT
             files
                 .Should().HaveCount(4)
-                .And.OnlyContain(x => x.Commit.Equals(commitId, StringComparison.OrdinalIgnoreCase))
-                .And.Contain(x => x.Path == "file1.txt")
-                .And.Contain(x => x.Path == "file2.txt")
-                .And.Contain(x => x.Path == "directory1/file3.txt")
-                .And.Contain(x => x.Path == "directory2/DIRECTORY3/file4.txt");
+                .And.Contain(x => x.FullName == "file1.txt")
+                .And.Contain(x => x.FullName == "file2.txt")
+                .And.Contain(x => x.FullName == "directory1/file3.txt")
+                .And.Contain(x => x.FullName == "directory2/DIRECTORY3/file4.txt");
         }
 
         [Test]
@@ -83,16 +111,15 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             GitAdd();
             var commitId = GitCommit();
 
+            using var sut = CreateInstance(m_WorkingDirectory);
 
             // ACT
-            using var sut = CreateInstance(m_WorkingDirectory);
-            var files = sut.GetFiles("some-other-branch").ToList();
+            var files = sut.GetRootDirectory(commitId).EnumerateFilesRescursively().ToList();
 
             // ASSERT
             files
                 .Should().HaveCount(1)
-                .And.OnlyContain(x => x.Commit.Equals(commitId, StringComparison.OrdinalIgnoreCase))
-                .And.OnlyContain(x => x.Path == "file2.txt");
+                .And.OnlyContain(x => x.FullName == "file2.txt");
         }
 
         [Test]
@@ -103,11 +130,11 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             var expectedContent = File.ReadAllText(path).Replace("\r\n", "\n");
 
             GitAdd();
-            GitCommit();
+            var commitId = GitCommit();
 
             // ACT
             using var sut = CreateInstance(m_WorkingDirectory);
-            var files = sut.GetFiles("master").ToList();
+            var files = sut.GetRootDirectory(commitId).EnumerateFilesRescursively().ToList();
 
             // ASSERT
             files

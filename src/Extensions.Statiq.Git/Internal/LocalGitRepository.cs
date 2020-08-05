@@ -28,7 +28,6 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             }
         }
 
-
         public LocalGitRepository(string repositoryPath)
         {
             if (String.IsNullOrWhiteSpace(repositoryPath))
@@ -38,10 +37,45 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
+
+        public IEnumerable<GitFile> GetFiles(string branch)
+        {
+            using var repository = OpenRepository();
+
+            var commit = repository.Branches[branch].Tip;
+            var commitId = repository.ObjectDatabase.ShortenObjectId(commit);
+            return EnumerateFiles(commitId, commit.Tree).ToArray();
+
+        }
+
         public void Dispose()
         { }
 
+        public string GetFileContent(ObjectId id)
+        {
+            using var repo = OpenRepository();
+            return repo.Lookup<Blob>(id).GetContentText();
+        }
+
 
         private Repository OpenRepository() => new Repository(m_RepositoryPath);
+
+        private IEnumerable<GitFile> EnumerateFiles(string commitId, Tree tree)
+        {
+            foreach (var item in tree)
+            {
+                if (item.Target is Tree subtree)
+                {
+                    foreach (var file in EnumerateFiles(commitId, subtree))
+                    {
+                        yield return file;
+                    }
+                }
+                else if (item.Target is Blob)
+                {
+                    yield return new GitFile(this, commitId, item.Path, item.Target.Id);
+                }
+            }
+        }
     }
 }

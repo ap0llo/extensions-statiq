@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using NUnit.Framework;
 
@@ -14,9 +15,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         public void GetRepository_returns_expected_GitRepository_for_remote_urls(string remoteUrl)
         {
             using var sut = GitRepositoryFactory.GetRepository(remoteUrl);
-            Assert.AreEqual(RepositoryKind.Remote, sut.Kind);
 
-            Assert.IsAssignableFrom<RemoteGitRepository>(sut);
+            sut.Kind.Should().Be(RepositoryKind.Remote);
+            sut.Should().BeAssignableTo<RemoteGitRepository>();
         }
 
         [TestCase(@"C:\some\repo")]
@@ -24,8 +25,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             using var sut = GitRepositoryFactory.GetRepository(remoteUrl);
 
-            Assert.AreEqual(RepositoryKind.Local, sut.Kind);
-            Assert.IsAssignableFrom<LocalGitRepository>(sut);
+            sut.Kind.Should().Be(RepositoryKind.Local);
+            sut.Should().BeAssignableTo<LocalGitRepository>();
         }
 
         [TestCase("not-a-url")]
@@ -33,7 +34,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         [TestCase("ssh://github.com/example/example.git")]
         public void GetRepository_throws_ArgumentException_for_unsupported_remote_urls(string remoteUrl)
         {
-            Assert.Throws<ArgumentException>(() => GitRepositoryFactory.GetRepository(remoteUrl));
+            Action act = () => GitRepositoryFactory.GetRepository(remoteUrl);
+            act.Should().Throw<ArgumentException>();
         }
     }
 }

@@ -66,6 +66,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
+        public IEnumerable<GitFile> GetFiles(string branch) => LocalRepository.GetFiles(branch);
+
         public void Dispose()
         {
             m_LocalRepository?.Dispose();

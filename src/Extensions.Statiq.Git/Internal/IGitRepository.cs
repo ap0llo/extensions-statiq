@@ -8,5 +8,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         RepositoryKind Kind { get; }
 
         IEnumerable<string> Branches { get; }
+
+        IEnumerable<GitFile> GetFiles(string branch);
     }
 }

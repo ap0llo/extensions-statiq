@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using NUnit.Framework;
 
@@ -17,13 +18,13 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             // Access branches to trigger cloning of the repository
             _ = sut.Branches;
 
-            Assert.NotNull(sut.RepositoryDirectory);
-            Assert.True(Directory.Exists(sut.RepositoryDirectory));
+            sut.RepositoryDirectory.Should().NotBeNullOrEmpty();
+            Directory.Exists(sut.RepositoryDirectory).Should().BeTrue();
 
             sut.Dispose();
 
-            Assert.NotNull(sut.RepositoryDirectory);
-            Assert.False(Directory.Exists(sut.RepositoryDirectory));
+            sut.RepositoryDirectory.Should().NotBeNullOrEmpty();
+            Directory.Exists(sut.RepositoryDirectory).Should().BeFalse();
         }
     }
 }

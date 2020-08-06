@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.VisualBasic;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using Statiq.Common;
 using Statiq.Testing;
 
@@ -20,7 +21,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             GitAdd();
             var commitId = GitCommit();
 
-            var sut = new ReadFilesFromGit(repositoryUrl);
+            var sut = new ReadFilesFromGit(repositoryUrl, "*");
 
             // ACT
             var output = await BaseFixture.ExecuteAsync(sut).SingleAsync();
@@ -45,6 +46,92 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Value.Should().Be("file1.txt");
         }
 
+        private static IEnumerable<object[]> GlobbingTestCases()
+        {
+            object[] TestCase(string[] files, string[] patterns, string[] expectedOutput)
+            {
+                return new object[] { files, patterns, expectedOutput };
+            }
+
+            string[] Input(params string[] items)
+            {
+                return items;
+            }
+
+            string[] Patterns(params string[] items)
+            {
+                return items;
+            }
+
+            string[] Output(params string[] items)
+            {
+                return items;
+            }
+
+            yield return TestCase(
+                Input(),
+                Patterns("*"),
+                Output()
+            );
+
+            yield return TestCase(
+                Input("file1.txt", "dir/file2.txt"),
+                Patterns("*.md"),
+                Output());
+
+            yield return TestCase(
+                Input("file1.txt", "dir/file2.txt"),
+                Patterns("**"),
+                Output("file1.txt", "dir/file2.txt"));
+
+            yield return TestCase(
+                Input("file1.txt", "file2.md"),
+                Patterns("*.md"),
+                Output("file2.md"));
+
+            yield return TestCase(
+                Input("dir1/file1.txt", "dir2/file2.txt"),
+                Patterns("dir1/*.txt"),
+                Output("dir1/file1.txt"));
+
+            yield return TestCase(
+                Input("file1.txt", "file2.txt", "file3.md"),
+                Patterns("*", "!*.txt"),
+                Output("file3.md"));
+
+            yield return TestCase(
+                Input("file1.txt", "file2.txt", "file3.md"),
+                Patterns("*.md", "*.txt"),
+                Output("file1.txt", "file2.txt", "file3.md"));
+        }
+
+        [TestCaseSource(nameof(GlobbingTestCases))]
+        public async Task Execute_returns_only_files_matched_by_patterns(string[] files, string[] patterns, string[] expectedOutput)
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            foreach (var file in files)
+            {
+                CreateFile(file);
+            }
+            GitAdd();
+            GitCommit(allowEmtpy: true);
+
+            var sut = new ReadFilesFromGit(repositoryUrl, patterns);
+
+            // ACT
+            var output = await BaseFixture.ExecuteAsync(sut);
+
+            // ASSERT
+            output.Should().HaveCount(expectedOutput.Length);
+
+            var outputPaths = output.Select(x => x.GetString(GitKeys.GitRelativePath)).ToArray();
+            foreach (var path in expectedOutput)
+            {
+                outputPaths.Should().Contain(path);
+            }
+        }
+
         [Test]
         public async Task Execute_returns_file_from_multiple_branches()
         {
@@ -60,7 +147,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             GitAdd();
             var commit2 = GitCommit();
 
-            var sut = new ReadFilesFromGit(repositoryUrl)
+            var sut = new ReadFilesFromGit(repositoryUrl, "*")
                 .WithBranchPatterns("master", "branch*");
 
             // ACT

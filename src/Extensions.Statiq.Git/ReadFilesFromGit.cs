@@ -5,23 +5,25 @@ using System.Threading.Tasks;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using Grynwald.Utilities;
 using Statiq.Common;
+using Globber = Grynwald.Extensions.Statiq.Git.Internal.Globber;
 
 namespace Grynwald.Extensions.Statiq.Git
 {
-    //TODO: Add support for file patterns
     //TODO: Remove hardcoded "master" branch, use repository default branch
     public class ReadFilesFromGit : Module
     {
         private readonly Config<string> m_RepositoryUrl;
         private IReadOnlyList<string> m_BranchPatterns = new[] { "master" };
+        private readonly IReadOnlyList<string> m_FilePatterns;
 
 
-        public ReadFilesFromGit(string repositoryUrl) : this(Config.FromValue(repositoryUrl))
+        public ReadFilesFromGit(string repositoryUrl, params string[] filePatterns) : this(Config.FromValue(repositoryUrl), filePatterns)
         { }
 
-        public ReadFilesFromGit(Config<string> repositoryUrl)
+        public ReadFilesFromGit(Config<string> repositoryUrl, params string[] filePatterns)
         {
             m_RepositoryUrl = repositoryUrl ?? throw new ArgumentNullException(nameof(repositoryUrl));
+            m_FilePatterns = filePatterns.ToArray();
         }
 
 
@@ -32,7 +34,7 @@ namespace Grynwald.Extensions.Statiq.Git
         }
 
 
-        protected async override Task<IEnumerable<IDocument>> ExecuteContextAsync(IExecutionContext context)
+        protected override async Task<IEnumerable<IDocument>> ExecuteContextAsync(IExecutionContext context)
         {
             m_RepositoryUrl.EnsureNonDocument();
 
@@ -50,8 +52,9 @@ namespace Grynwald.Extensions.Statiq.Git
             foreach (var branchName in matchingBranches)
             {
                 var commitId = repository.GetHeadCommitId(branchName);
+                var rootDir = repository.GetRootDirectory(commitId);
 
-                var branchOutputs = repository.GetRootDirectory(commitId).EnumerateFilesRescursively().Select(file =>
+                var branchOutputs = Globber.GetFiles(rootDir, m_FilePatterns).Select(file =>
                 {
                     var metadata = new Dictionary<string, object>()
                     {

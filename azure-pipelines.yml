@@ -45,7 +45,7 @@ variables:
   nuget_org_ServiceConnectionName: 'NuGet.org - extensions-statiq'  # the name of the Azure DevOps service connection to use for NuGet.org
   
   # GitHub settings
-  github_ServiceConnectionName: 'ap0llo'                            # the name of the Azure DevOps service connection to use for creating GitHub releases
+  github_ServiceConnectionName: 'GitHub: ap0llo'                    # the name of the Azure DevOps service connection to use for creating GitHub releases
   github_repositoryName: 'ap0llo/extensions-statiq'                 # the name of the github repo to create the release in
 
 jobs:

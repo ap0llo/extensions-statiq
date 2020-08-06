@@ -148,7 +148,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             var commit2 = GitCommit();
 
             var sut = new ReadFilesFromGit(repositoryUrl, "*")
-                .WithBranchPatterns("master", "branch*");
+                .WithBranchNames("master", "branch*");
 
             // ACT
             var outputs = await BaseFixture.ExecuteAsync(sut);

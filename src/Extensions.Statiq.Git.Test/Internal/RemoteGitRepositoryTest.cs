@@ -13,7 +13,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         [Test]
         public void Disposing_the_GitRepository_deletes_the_temporary_repository_directory()
         {
-            var sut = new RemoteGitRepository(m_WorkingDirectory);
+            using var sut = new RemoteGitRepository(m_WorkingDirectory);
 
             // Access branches to trigger cloning of the repository
             _ = sut.Branches;

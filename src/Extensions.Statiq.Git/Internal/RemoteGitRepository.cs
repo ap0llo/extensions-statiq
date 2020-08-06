@@ -54,7 +54,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
         public RepositoryKind Kind => RepositoryKind.Remote;
 
+        public string CurrentBranch => LocalRepository.CurrentBranch;
+
         public IEnumerable<string> Branches => LocalRepository.Branches;
+
 
 
         public RemoteGitRepository(string remoteUrl)

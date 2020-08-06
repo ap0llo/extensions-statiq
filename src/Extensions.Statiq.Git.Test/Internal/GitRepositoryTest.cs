@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
@@ -140,6 +139,30 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             files
                 .Should().ContainSingle()
                 .Which.GetContentStream().ReadAsString().Should().Be(expectedContent);
+        }
+
+        [Test]
+        public void CurrentBranch_returns_expected_value_01()
+        {
+            using var sut = CreateInstance(m_WorkingDirectory);
+            sut.CurrentBranch.Should().Be("master");
+        }
+
+        [Test]
+        public void CurrentBranch_returns_expected_value_02()
+        {
+            // ARRANGE
+            GitCommit(allowEmtpy: true);
+            Git("checkout -b my-default-branch");
+            Git("branch -D master");
+
+            using var sut = CreateInstance(m_WorkingDirectory);
+
+            // ACT
+            var currentBranch = sut.CurrentBranch;
+
+            // ASSERT
+            currentBranch.Should().Be("my-default-branch");
         }
     }
 }

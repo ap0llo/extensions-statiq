@@ -27,7 +27,7 @@ namespace Grynwald.Extensions.Statiq.Git
     /// The file pattern format is the same ´format used by the <c>ReadFiles</c> module in Statiq.Core.
     /// </para>
     /// <para>
-    /// By default, data will be read from the <c>master</c> branch.
+    /// By default, data will be read from the repository's default branch.
     /// To specify a different branch (or multiple branches), use <see cref="WithBranchNames(String[])"/>.
     /// </para>
     /// For each documents, the module set the following metadata keys:
@@ -51,17 +51,16 @@ namespace Grynwald.Extensions.Statiq.Git
     /// </list>
     /// </remarks>
     /// <example>
-    /// To read all files from the <c>docs</c> folder from the <c>master</c> branch and all branches which name starts with <c>release/</c>, use
+    /// To read all files from the <c>docs</c> folder from the <c>main</c> branch and all branches which name starts with <c>release/</c>, use
     /// <code lang="cs">
     /// new ReadFilesFromGit("https://example.com/my-repository.git", "docs/**")
-    ///     .WithBranchPatterns("master", "release/*")
+    ///     .WithBranchPatterns("main", "release/*")
     /// </code>
     /// </example>
-    //TODO: Remove hard-coded "master" branch, use repository default branch
     public class ReadFilesFromGit : Module
     {
         private readonly Config<string> m_RepositoryUrl;
-        private IReadOnlyList<string> m_BranchNames = new[] { "master" };
+        private IReadOnlyList<string>? m_BranchNames = null;
         private IReadOnlyList<string> m_FilePatterns;
 
 
@@ -98,7 +97,7 @@ namespace Grynwald.Extensions.Statiq.Git
         /// Sets the names of the branches to read from the repository.
         /// </summary>
         /// <remarks>
-        /// By default, documents are read from the <c>master</c> branch.
+        /// By default, documents are read from the repository's default branch.
         /// Supports wildcards, (e.g. <c>release/*</c>) to read branches from all branches matching the pattern.
         /// </remarks>
         public ReadFilesFromGit WithBranchNames(params string[] branchNames)
@@ -124,19 +123,32 @@ namespace Grynwald.Extensions.Statiq.Git
             m_RepositoryUrl.EnsureNonDocument();
             var repositoryUrl = await m_RepositoryUrl.GetValueAsync(null, context);
 
-            var branchPatterns = m_BranchNames.Select(x => new Wildcard(x)).ToList();
 
             // load repository
             using var repository = GitRepositoryFactory.GetRepository(repositoryUrl);
 
-            // get branches matching the patterns
-            var matchingBranches = repository.Branches
-              .Where(branchName => branchPatterns.Any(pattern => pattern.IsMatch(branchName)))
-              .ToList();
-
-            if(!matchingBranches.Any())
+            IReadOnlyList<string> matchingBranches;
+            if (m_BranchNames is null)
             {
-                context.LogWarning($"The repository contains no branches matching any of the configured names {String.Join(", ", m_BranchNames.Select(x => $"'{x}'"))}");
+                matchingBranches = new[] { repository.CurrentBranch };
+            }
+            else
+            {
+                var branchPatterns = m_BranchNames.Select(x => new Wildcard(x)).ToList();
+
+                // get branches matching the patterns
+                matchingBranches = repository.Branches
+                  .Where(branchName => branchPatterns.Any(pattern => pattern.IsMatch(branchName)))
+                  .ToList();
+
+                if (!matchingBranches.Any())
+                {
+                    context.LogWarning($"The repository contains no branches matching any of the configured names {String.Join(", ", m_BranchNames.Select(x => $"'{x}'"))}");
+                }
+            }
+
+            if (!matchingBranches.Any())
+            {
                 return Enumerable.Empty<IDocument>();
             }
 

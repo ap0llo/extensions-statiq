@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using LibGit2Sharp;
 
@@ -9,13 +8,17 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
     public class LocalGitRepository : IGitRepository
     {
         private readonly string m_RepositoryPath;
-        private Lazy<Repository> m_Repository;
+        private readonly Lazy<Repository> m_Repository;
 
 
         private Repository Repository => m_Repository.Value;
 
 
         public RepositoryKind Kind => RepositoryKind.Local;
+
+        public string CurrentBranch => Repository.Info.IsHeadDetached
+            ? throw new InvalidOperationException("Cannot get current branch name because repository is in 'detached HEAD' state")
+            : Repository.Head.FriendlyName;
 
         public IEnumerable<string> Branches
         {

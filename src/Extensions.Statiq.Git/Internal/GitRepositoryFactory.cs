@@ -6,8 +6,6 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
     {
         public static IGitRepository GetRepository(string repositoryUrl)
         {
-            //TODO: remoteUrl must not be null or whitespace
-
             var repositoryKind = RepositoryKind.Unknown;
             if (Uri.TryCreate(repositoryUrl, UriKind.Absolute, out var uri))
             {

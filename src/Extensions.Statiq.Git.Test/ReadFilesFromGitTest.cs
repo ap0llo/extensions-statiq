@@ -232,5 +232,33 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 message.FormattedMessage.Should().Contain($"'{pattern}'");
             }
         }
+
+        [Test]
+        public async Task Execute_reads_files_from_default_branch_if_no_branch_names_are_specified()
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            var initalCommit = GitCommit(allowEmtpy: true);
+            CreateFile("file1.txt");
+            GitAdd();
+            GitCommit();
+
+            Git($"checkout {initalCommit} -b my-new-default-branch");
+            CreateFile("file2.txt");
+            GitAdd();
+            GitCommit();
+
+            Git("branch -D master");
+
+            var sut = new ReadFilesFromGit(repositoryUrl, "*");
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs.Should().ContainSingle()
+                .Which.Should().Contain(x => x.Key == GitKeys.GitRelativePath)
+                .Which.Value.Should().Be("file2.txt");
+        }
     }
 }

@@ -7,6 +7,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
     {
         RepositoryKind Kind { get; }
 
+        string CurrentBranch { get; }
+
         IEnumerable<string> Branches { get; }
 
         GitId GetHeadCommitId(string branchName);

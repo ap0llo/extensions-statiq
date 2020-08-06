@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -6,6 +6,8 @@
 
     <ItemGroup>
         <PackageReference Include="Statiq.Common" Version="1.0.0-beta.19" />
+        <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
+        <PackageReference Include="Grynwald.Utilities" Version="1.6.48-pre" />
     </ItemGroup>
 
 </Project>

@@ -8,14 +8,16 @@ using NUnit.Framework;
 
 namespace Grynwald.Extensions.Statiq.Git.Test
 {
-    public abstract class GitTestBase
+    public abstract class GitTestBase : TestBase
     {
         protected TemporaryDirectory m_WorkingDirectory = null!;
 
 
         [SetUp]
-        public virtual void SetUp()
+        public override void SetUp()
         {
+            base.SetUp();
+
             m_WorkingDirectory = new TemporaryDirectory();
 
             Git("init");

@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using NUnit.Framework.Internal;
 using Statiq.Common;
-using Statiq.Testing;
 
 namespace Grynwald.Extensions.Statiq.Git.Test
 {
@@ -27,7 +27,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             var sut = new ReadFilesFromGit(repositoryUrl, "*");
 
             // ACT
-            var output = await BaseFixture.ExecuteAsync(sut).SingleAsync();
+            var output = await ExecuteAsync(sut).SingleAsync();
 
             // ASSERT
             var content = await output.GetContentStringAsync();
@@ -131,7 +131,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 : new ReadFilesFromGit(repositoryUrl, patterns);
 
             // ACT
-            var output = await BaseFixture.ExecuteAsync(sut);
+            var output = await ExecuteAsync(sut);
 
             // ASSERT
             output.Should().HaveCount(expectedOutput.Length);
@@ -162,7 +162,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .WithBranchNames("master", "branch*");
 
             // ACT
-            var outputs = await BaseFixture.ExecuteAsync(sut);
+            var outputs = await ExecuteAsync(sut);
 
             // ASSERT
             outputs.Should().HaveCount(2);
@@ -202,6 +202,35 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
                 .Which.Value.Should().Be("file2.txt");
+        }
+
+        [Test]
+        public async Task Execute_emits_warning_is_no_branches_match_the_specified_names()
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            CreateFile("file1.txt");
+            GitAdd();
+            GitCommit();
+
+            var patterns = new[] { "branch1*", "branch2*" };
+
+            var sut = new ReadFilesFromGit(repositoryUrl, "*")
+                .WithBranchNames(patterns);
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs.Should().BeEmpty();
+
+            var message = m_TestExecutionContext.LogMessages.Should().ContainSingle().Which;
+
+            message.LogLevel.Should().Be(LogLevel.Warning);
+            foreach (var pattern in patterns)
+            {
+                message.FormattedMessage.Should().Contain($"'{pattern}'");
+            }
         }
     }
 }

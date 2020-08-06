@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using Grynwald.Utilities;
+using Microsoft.Extensions.Logging;
 using Statiq.Common;
 using Globber = Grynwald.Extensions.Statiq.Git.Internal.Globber;
 
@@ -22,12 +23,12 @@ namespace Grynwald.Extensions.Statiq.Git
     /// </para>
     /// <para>
     /// By default, all files from a repository's branch are read.
-    /// To limit the set of files, specify one or more file patterns using either the constructor or <see cref="WithFilePatterns(string[])"/>
+    /// To limit the set of files, specify one or more file patterns using either the constructor or <see cref="WithFilePatterns(String[])"/>
     /// The file pattern format is the same ´format used by the <c>ReadFiles</c> module in Statiq.Core.
     /// </para>
     /// <para>
     /// By default, data will be read from the <c>master</c> branch.
-    /// To specify a different branch (or multiple branches), use <see cref="WithBranchNames(global::System.String[])"/>.
+    /// To specify a different branch (or multiple branches), use <see cref="WithBranchNames(String[])"/>.
     /// </para>
     /// For each documents, the module set the following metadata keys:
     /// <list type="bullet">
@@ -52,13 +53,11 @@ namespace Grynwald.Extensions.Statiq.Git
     /// <example>
     /// To read all files from the <c>docs</c> folder from the <c>master</c> branch and all branches which name starts with <c>release/</c>, use
     /// <code lang="cs">
-    /// new ReadFilesFromGit("https://example.com", "docs/**")
+    /// new ReadFilesFromGit("https://example.com/my-repository.git", "docs/**")
     ///     .WithBranchPatterns("master", "release/*")
     /// </code>
     /// </example>
     //TODO: Remove hard-coded "master" branch, use repository default branch
-    //TODO: Use IExecutionContext.FileSystem.TempPath to store the local copy of the repository?
-    //TODO: Emit warnings if no branches are matched
     public class ReadFilesFromGit : Module
     {
         private readonly Config<string> m_RepositoryUrl;
@@ -134,6 +133,12 @@ namespace Grynwald.Extensions.Statiq.Git
             var matchingBranches = repository.Branches
               .Where(branchName => branchPatterns.Any(pattern => pattern.IsMatch(branchName)))
               .ToList();
+
+            if(!matchingBranches.Any())
+            {
+                context.LogWarning($"The repository contains no branches matching any of the configured names {String.Join(", ", m_BranchNames.Select(x => $"'{x}'"))}");
+                return Enumerable.Empty<IDocument>();
+            }
 
             var outputs = new List<IDocument>();
 

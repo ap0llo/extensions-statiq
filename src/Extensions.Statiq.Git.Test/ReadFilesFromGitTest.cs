@@ -9,6 +9,9 @@ using Statiq.Testing;
 
 namespace Grynwald.Extensions.Statiq.Git.Test
 {
+    /// <summary>
+    /// Tests for <see cref="ReadFilesFromGit"/>
+    /// </summary>
     [TestFixture]
     public class ReadFilesFromGitTest : GitTestBase
     {
@@ -46,11 +49,11 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Value.Should().Be("file1.txt");
         }
 
-        private static IEnumerable<object[]> GlobbingTestCases()
+        private static IEnumerable<object?[]> GlobbingTestCases()
         {
-            object[] TestCase(string[] files, string[] patterns, string[] expectedOutput)
+            object?[] TestCase(string[] files, string[]? patterns, string[] expectedOutput)
             {
-                return new object[] { files, patterns, expectedOutput };
+                return new object?[] { files, patterns, expectedOutput };
             }
 
             string[] Input(params string[] items)
@@ -58,7 +61,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 return items;
             }
 
-            string[] Patterns(params string[] items)
+            string[]? Patterns(params string[]? items)
             {
                 return items;
             }
@@ -103,10 +106,16 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 Input("file1.txt", "file2.txt", "file3.md"),
                 Patterns("*.md", "*.txt"),
                 Output("file1.txt", "file2.txt", "file3.md"));
+
+            // specifying no patterns should return all files
+            yield return TestCase(
+              Input("file1.txt", "dir/file2.txt"),
+              Patterns(null),
+              Output("file1.txt", "dir/file2.txt"));
         }
 
         [TestCaseSource(nameof(GlobbingTestCases))]
-        public async Task Execute_returns_only_files_matched_by_patterns(string[] files, string[] patterns, string[] expectedOutput)
+        public async Task Execute_returns_only_files_matched_by_patterns(string[] files, string[]? patterns, string[] expectedOutput)
         {
             // ARRANGE
             var repositoryUrl = m_WorkingDirectory.FullName;
@@ -117,7 +126,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             GitAdd();
             GitCommit(allowEmtpy: true);
 
-            var sut = new ReadFilesFromGit(repositoryUrl, patterns);
+            var sut = patterns is null
+                ? new ReadFilesFromGit(repositoryUrl)
+                : new ReadFilesFromGit(repositoryUrl, patterns);
 
             // ACT
             var output = await BaseFixture.ExecuteAsync(sut);

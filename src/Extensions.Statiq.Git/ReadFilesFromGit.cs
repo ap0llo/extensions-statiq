@@ -21,7 +21,8 @@ namespace Grynwald.Extensions.Statiq.Git
     /// so uncommited changes in a local repository will not be read.
     /// </para>
     /// <para>
-    /// Specify one or more file patterns to select which files to read from the repository.
+    /// By default, all files from a repository's branch are read.
+    /// To limit the set of files, specify one or more file patterns using either the constructor or <see cref="WithFilePatterns(string[])"/>
     /// The file pattern format is the same ´format used by the <c>ReadFiles</c> module in Statiq.Core.
     /// </para>
     /// <para>
@@ -57,13 +58,27 @@ namespace Grynwald.Extensions.Statiq.Git
     /// </example>
     //TODO: Remove hard-coded "master" branch, use repository default branch
     //TODO: Use IExecutionContext.FileSystem.TempPath to store the local copy of the repository?
-    //TODO: By default, read all files instead of none
     //TODO: Emit warnings if no branches are matched
     public class ReadFilesFromGit : Module
     {
         private readonly Config<string> m_RepositoryUrl;
         private IReadOnlyList<string> m_BranchNames = new[] { "master" };
-        private readonly IReadOnlyList<string> m_FilePatterns;
+        private IReadOnlyList<string> m_FilePatterns;
+
+
+        /// <summary>
+        /// Reads all files from a git repository.
+        /// </summary>
+        /// <param name="repositoryUrl">The url of the git repository. This can be a local path or a http(s) url.</param>
+        public ReadFilesFromGit(string repositoryUrl) : this(Config.FromValue(repositoryUrl))
+        { }
+
+        /// <inheritdoc cref="ReadFilesFromGit(String)"/>
+        public ReadFilesFromGit(Config<string> repositoryUrl)
+        {
+            m_RepositoryUrl = repositoryUrl ?? throw new ArgumentNullException(nameof(repositoryUrl));
+            m_FilePatterns = new[] { "**" };
+        }
 
         /// <summary>
         /// Reads files from a git repository.
@@ -87,12 +102,23 @@ namespace Grynwald.Extensions.Statiq.Git
         /// By default, documents are read from the <c>master</c> branch.
         /// Supports wildcards, (e.g. <c>release/*</c>) to read branches from all branches matching the pattern.
         /// </remarks>
-        public ReadFilesFromGit WithBranchNames(params string[] branchPatterns)
+        public ReadFilesFromGit WithBranchNames(params string[] branchNames)
         {
-            m_BranchNames = branchPatterns.ToArray();
+            m_BranchNames = branchNames.ToArray();
             return this;
         }
 
+        /// <summary>
+        /// Sets the patterns to use for filtering which files to read from the repository.
+        /// </summary>
+        /// <remarks>
+        /// Uses the same format as <c>ReadFiles</c> module in Statiq.Core.
+        /// </remarks>
+        public ReadFilesFromGit WithFileNames(params string[] filePatterns)
+        {
+            m_FilePatterns = filePatterns.ToArray();
+            return this;
+        }
 
         protected override async Task<IEnumerable<IDocument>> ExecuteContextAsync(IExecutionContext context)
         {

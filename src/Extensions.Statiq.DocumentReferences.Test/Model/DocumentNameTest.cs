@@ -7,11 +7,11 @@ using NUnit.Framework;
 namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
 {
     /// <summary>
-    /// Tests for <see cref="DocumentId"/>.
+    /// Tests for <see cref="DocumentName"/>.
     /// </summary>
-    public class DocumentIdTest
+    public class DocumentNameTest
     {
-        public static IEnumerable<object?[]> InvalidIds()
+        public static IEnumerable<object?[]> InvalidNames()
         {
             // Value must not be null or whitespace
 
@@ -33,20 +33,20 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
             yield return new object?[] { "\tid\t" };
         }
 
-        [TestCaseSource(nameof(InvalidIds))]
+        [TestCaseSource(nameof(InvalidNames))]
         public void Constructor_throws_ArgumentException_for_invalid_values(string value)
         {
-            Action act = () => new DocumentId(value);
+            Action act = () => new DocumentName(value);
             act.Should().Throw<ArgumentException>();
         }
 
-        [TestCaseSource(nameof(InvalidIds))]
+        [TestCaseSource(nameof(InvalidNames))]
         public void TryCreate_returns_false_for_invalid_values(string value)
         {
-            var success = DocumentId.TryCreate(value, out var id);
+            var success = DocumentName.TryCreate(value, out var name);
 
             success.Should().BeFalse();
-            id.Should().BeNull();
+            name.Should().BeNull();
         }
 
         [TestCase("@")]
@@ -55,10 +55,10 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
         {
             var actions = new Action[]
             {
-                () => new DocumentId($"prefix{reserved}suffix"),
-                () => new DocumentId($"prefix{reserved}"),
-                () => new DocumentId($"{reserved}suffix"),
-                () => new DocumentId(reserved)
+                () => new DocumentName($"prefix{reserved}suffix"),
+                () => new DocumentName($"prefix{reserved}"),
+                () => new DocumentName($"{reserved}suffix"),
+                () => new DocumentName(reserved)
             };
 
             foreach (var act in actions)
@@ -71,36 +71,36 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
         [TestCase("#")]
         public void TryCreate_returns_false_if_value_contains_invalid_characters(string reserved)
         {
-            var success = DocumentId.TryCreate($"prefix{reserved}suffix", out var id);
+            var success = DocumentName.TryCreate($"prefix{reserved}suffix", out var name);
             success.Should().BeFalse();
-            id.Should().BeNull();
+            name.Should().BeNull();
 
-            success = DocumentId.TryCreate($"prefix{reserved}", out id);
+            success = DocumentName.TryCreate($"prefix{reserved}", out name);
             success.Should().BeFalse();
-            id.Should().BeNull();
+            name.Should().BeNull();
 
-            success = DocumentId.TryCreate($"{reserved}suffix", out id);
+            success = DocumentName.TryCreate($"{reserved}suffix", out name);
             success.Should().BeFalse();
-            id.Should().BeNull();
+            name.Should().BeNull();
 
-            success = DocumentId.TryCreate(reserved, out id);
+            success = DocumentName.TryCreate(reserved, out name);
             success.Should().BeFalse();
-            id.Should().BeNull();
+            name.Should().BeNull();
         }
 
         [TestCase("some-id")]
         public void TryCreate_returns_true_if_value_is_valid_id(string value)
         {
-            var success = DocumentId.TryCreate(value, out var id);
+            var success = DocumentName.TryCreate(value, out var name);
             success.Should().BeTrue();
-            id.Should().NotBeNull();
+            name.Should().NotBeNull();
         }
 
         [Test]
         public void DocsId_instances_can_implicitly_be_converted_to_string()
         {
-            var uid = new DocumentId("value");
-            string value = uid;
+            var name = new DocumentName("value");
+            string value = name;
 
             value.Should().Be("value");
         }
@@ -108,8 +108,8 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
         [Test]
         public void ToString_returns_value()
         {
-            var id = new DocumentId("value");
-            var value = id.ToString();
+            var name = new DocumentName("value");
+            var value = name.ToString();
 
             value.Should().Be("value");
         }
@@ -119,34 +119,34 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
         [TestCase("vaLUe", "value")]
         public void Comparision_of_two_equal_instances_yield_expected_result(string left, string right)
         {
-            var leftId = new DocumentId(left);
-            var rightId = new DocumentId(right);
+            var leftName = new DocumentName(left);
+            var rightName = new DocumentName(right);
 
             // instances must be equal to themselves
-            Assert.AreEqual(leftId, leftId);
-            Assert.AreEqual(rightId, rightId);
+            Assert.AreEqual(leftName, leftName);
+            Assert.AreEqual(rightName, rightName);
 
 #pragma warning disable CS1718 // Comparison made to same variable
-            Assert.True(leftId == leftId);
-            Assert.False(leftId != leftId);
-            Assert.True(rightId == rightId);
-            Assert.False(rightId != rightId);
+            Assert.True(leftName == leftName);
+            Assert.False(leftName != leftName);
+            Assert.True(rightName == rightName);
+            Assert.False(rightName != rightName);
 #pragma warning restore CS1718 // Comparison made to same variable
 
             // hash code must be equal
-            Assert.AreEqual(leftId.GetHashCode(), rightId.GetHashCode());
+            Assert.AreEqual(leftName.GetHashCode(), rightName.GetHashCode());
 
-            Assert.AreEqual(leftId, rightId);
-            Assert.AreEqual(rightId, leftId);
-            Assert.True(leftId.Equals(rightId));
-            Assert.True(leftId.Equals((object)rightId));
-            Assert.True(rightId.Equals(leftId));
-            Assert.True(rightId.Equals((object)leftId));
+            Assert.AreEqual(leftName, rightName);
+            Assert.AreEqual(rightName, leftName);
+            Assert.True(leftName.Equals(rightName));
+            Assert.True(leftName.Equals((object)rightName));
+            Assert.True(rightName.Equals(leftName));
+            Assert.True(rightName.Equals((object)leftName));
 
-            var isEqual1 = leftId == rightId;
-            var isEqual2 = rightId == leftId;
-            var isNotEqual1 = leftId != rightId;
-            var isNotEqual2 = rightId != leftId!;
+            var isEqual1 = leftName == rightName;
+            var isEqual2 = rightName == leftName;
+            var isNotEqual1 = leftName != rightName;
+            var isNotEqual2 = rightName != leftName!;
 
             Assert.True(isEqual1);
             Assert.True(isEqual2);
@@ -157,14 +157,14 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
         [Test]
         public void DocumentId_instances_can_be_compared_to_null()
         {
-            (new DocumentId("value") == null).Should().BeFalse();
-            (null == new DocumentId("value")).Should().BeFalse();
+            (new DocumentName("value") == null).Should().BeFalse();
+            (null == new DocumentName("value")).Should().BeFalse();
 
-            (new DocumentId("value") != null).Should().BeTrue();
-            (null != new DocumentId("value")).Should().BeTrue();
+            (new DocumentName("value") != null).Should().BeTrue();
+            (null != new DocumentName("value")).Should().BeTrue();
 
-            (null == (DocumentId?)null).Should().BeTrue();
-            (null != (DocumentId?)null).Should().BeFalse();
+            (null == (DocumentName?)null).Should().BeTrue();
+            (null != (DocumentName?)null).Should().BeFalse();
         }
     }
 }

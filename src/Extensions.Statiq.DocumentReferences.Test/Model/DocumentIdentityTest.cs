@@ -10,7 +10,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
     /// <summary>
     /// Tests for <see cref="DocumentIdentity"/>
     /// </summary>
-    public class DocsIdentityTest
+    public class DocumentIdentityTest
     {
         [Test]
         public void Name_must_not_be_null()

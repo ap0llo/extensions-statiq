@@ -10,7 +10,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test.Model
     /// <summary>
     /// Tests for <see cref="DocumentReference"/> and its derived classes
     /// </summary>
-    public class DocsReferenceTest
+    public class DocumentReferenceTest
     {
         public static IEnumerable<object?[]> InvalidReferences()
         {

@@ -260,5 +260,32 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                 .Which.Should().Contain(x => x.Key == GitKeys.GitRelativePath)
                 .Which.Value.Should().Be("file2.txt");
         }
+
+        [TestCase("master")]
+        [TestCase("some/other/branch")]
+        public async Task Execute_adds_a_placeholder_source_path_to_the_documents(string branchName)
+        {
+            // ARRANGE
+            Git($"checkout -b {branchName}");
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            CreateFile("dir1/file1.txt");
+            GitAdd();
+            GitCommit();
+
+            var sut = new ReadFilesFromGit(repositoryUrl);
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs
+                .Should().ContainSingle()
+                .Which.Source
+                    .Should().Match<NormalizedPath>(x => !x.IsNull)
+                    .And.Subject.ToString()
+                        .Should().EndWith($"{branchName}/dir1/file1.txt")
+                        .And.Contain("/git/");
+        }
+
     }
 }

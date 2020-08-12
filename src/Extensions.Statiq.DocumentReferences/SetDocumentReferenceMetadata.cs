@@ -25,6 +25,10 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences
     ///         <term><see cref="DocumentReferenceKeys.DocumentIdentity"/></term>
     ///         <description>The document's identity as instance of <see cref="DocumentIdentity"/></description>
     ///     </item>
+    ///     <item>
+    ///         <term><see cref="DocumentReferenceKeys.DocumentReference"/></term>
+    ///         <description>The reference to the document as instance of <see cref="DocumentReference"/></description>
+    ///     </item>
     /// </list>
     /// </remarks>
     public sealed class SetDocumentReferenceMetadata : Module
@@ -90,7 +94,8 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences
                 {
                     { DocumentReferenceKeys.DocumentName, name },
                     { DocumentReferenceKeys.DocumentVersion, version },
-                    { DocumentReferenceKeys.DocumentIdentity, identity }
+                    { DocumentReferenceKeys.DocumentIdentity, identity },
+                    { DocumentReferenceKeys.DocumentReference, new FullyQualifiedDocumentReference(identity) }
                 };
 
                 var output = input.Clone(metadata);

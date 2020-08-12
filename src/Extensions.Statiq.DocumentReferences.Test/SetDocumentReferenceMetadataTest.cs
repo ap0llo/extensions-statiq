@@ -34,6 +34,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test
             output.GetDocumentName().Should().NotBeNull().And.Be(new DocumentName("name"));
             output.GetDocumentVersion().Should().NotBeNull().And.Be(NuGetVersion.Parse("1.0"));
             output.GetDocumentIdentity().Should().NotBeNull().And.Be(DocumentIdentity.Parse("name@1.0"));
+            output.GetDocumentReference().Should().NotBeNull().And.Be(DocumentReference.Parse("ref:name@1.0"));
         }
 
         [Test]
@@ -53,6 +54,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences.Test
             output.GetDocumentName().Should().NotBeNull().And.Be(new DocumentName("name"));
             output.GetDocumentVersion().Should().NotBeNull().And.Be(NuGetVersion.Parse("1.0"));
             output.GetDocumentIdentity().Should().NotBeNull().And.Be(DocumentIdentity.Parse("name@1.0"));
+            output.GetDocumentReference().Should().NotBeNull().And.Be(DocumentReference.Parse("ref:name@1.0"));
         }
 
         [Test]

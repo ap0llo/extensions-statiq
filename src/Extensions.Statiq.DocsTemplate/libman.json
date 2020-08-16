@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "highlight.js@10.1.1",
+      "files": [ "highlight.min.js", "styles/default.min.css" ],
+      "destination": "input/theme/Default/dependencies/highlight.js/"
+    },
+    {
+      "library": "jquery@3.5.1",
+      "files": [ "jquery.min.js" ],
+      "destination": "input/theme/Default/dependencies/jquery/"
+    },
+    {
+      "library": "popper.js@1.16.0",
+      "files": [ "popper.min.js" ],
+      "destination": "input/theme/Default/dependencies/popper.js/"
+    },
+    {
+      "provider": "unpkg",
+      "library": "bootstrap@4.5.0",
+      "files": [ "dist/css/bootstrap.min.css", "dist/js/bootstrap.min.js" ],
+      "destination": "input/theme/Default/dependencies/bootstrap/"
+    }
+  ]
+}

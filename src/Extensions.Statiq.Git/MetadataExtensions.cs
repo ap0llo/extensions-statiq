@@ -22,6 +22,6 @@ namespace Grynwald.Extensions.Statiq.Git
         /// <summary>
         /// Gets the value for the <see cref="GitKeys.GitRelativePath"/> key.
         /// </summary>
-        public static string GetGitRelativePath(this IMetadata metadata) => metadata.GetString(GitKeys.GitRelativePath);
+        public static NormalizedPath GetGitRelativePath(this IMetadata metadata) => metadata.Get<NormalizedPath>(GitKeys.GitRelativePath);
     }
 }

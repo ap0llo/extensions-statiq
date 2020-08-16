@@ -71,7 +71,7 @@ namespace Grynwald.Extensions.Statiq.Git
     ///     </item>
     ///     <item>
     ///         <term><see cref="GitKeys.GitRelativePath"/></term>
-    ///         <description>The relative path in the git repository of the input document.</description>
+    ///         <description>The relative path in the git repository of the input document (as <see cref="NormalizedPath"/>).</description>
     ///     </item>
     /// </list>
     /// </para>
@@ -199,7 +199,7 @@ namespace Grynwald.Extensions.Statiq.Git
                         { GitKeys.GitRepositoryUrl, repositoryUrl },
                         { GitKeys.GitBranch, branchName },
                         { GitKeys.GitCommit, commitId.ToString() },
-                        { GitKeys.GitRelativePath, file.FullName },
+                        { GitKeys.GitRelativePath, new NormalizedPath(file.FullName) },
                     };
 
                     using var stream = file.GetContentStream();

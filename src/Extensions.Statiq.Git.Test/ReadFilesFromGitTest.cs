@@ -46,7 +46,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                     .And.Be(commitId.Id);
             output
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
-                .Which.Value.Should().Be("file1.txt");
+                .Which.Value.Should().BeAssignableTo<NormalizedPath>().
+                And.Be((NormalizedPath)"file1.txt");
         }
 
         private static IEnumerable<object?[]> GlobbingTestCases()
@@ -136,7 +137,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             // ASSERT
             output.Should().HaveCount(expectedOutput.Length);
 
-            var outputPaths = output.Select(x => x.GetString(GitKeys.GitRelativePath)).ToArray();
+            var outputPaths = output.Select(x => x.Get<NormalizedPath>(GitKeys.GitRelativePath)).ToArray();
             foreach (var path in expectedOutput)
             {
                 outputPaths.Should().Contain(path);
@@ -186,7 +187,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                     .And.Be(commit1.Id);
             output1
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
-                .Which.Value.Should().Be("file1.txt");
+                .Which.Value
+                    .Should().BeAssignableTo<NormalizedPath>()
+                    .And.Be((NormalizedPath)"file1.txt");
 
             output2
                  .Should().Contain(x => x.Key == GitKeys.GitRepositoryUrl)
@@ -201,7 +204,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                     .And.Be(commit2.Id);
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
-                .Which.Value.Should().Be("file2.txt");
+                .Which.Value
+                    .Should().BeAssignableTo<NormalizedPath>()
+                    .And.Be((NormalizedPath)"file2.txt");
         }
 
         [Test]
@@ -258,7 +263,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             // ASSERT
             outputs.Should().ContainSingle()
                 .Which.Should().Contain(x => x.Key == GitKeys.GitRelativePath)
-                .Which.Value.Should().Be("file2.txt");
+                .Which.Value
+                    .Should().BeAssignableTo<NormalizedPath>()
+                    .And.Be((NormalizedPath)"file2.txt");
         }
 
         [TestCase("master")]

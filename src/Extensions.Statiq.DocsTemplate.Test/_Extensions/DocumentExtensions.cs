@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
 using Statiq.Common;
 
 namespace Grynwald.Extensions.Statiq.DocsTemplate.Test
@@ -11,8 +10,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test
         internal static async Task<IHtmlDocument> ParseAsHtmlAsync(this IDocument document)
         {
             var html = await document.GetContentStringAsync();
-            var htmlDocument = new HtmlParser().Parse(html);
-            return htmlDocument;
+            return html.ParseAsHtml();
         }
     }
 }

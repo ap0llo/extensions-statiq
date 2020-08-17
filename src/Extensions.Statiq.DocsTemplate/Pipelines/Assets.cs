@@ -30,12 +30,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Pipelines
         {
             var config = Config.FromContext<IEnumerable<string>>(ctx =>
             {
-                var themeName = ctx.GetString(DocsTemplateKeys.DocsTemplateThemeName);
-                if (String.IsNullOrEmpty(themeName))
-                {
-                    themeName = DocsTemplateThemeNames.Default;
-                }
-
+                var themeName = ctx.GetString(DocsTemplateKeys.DocsTemplateThemeName, DocsTemplateThemeNames.Default);
                 return new[] { fromThemeName(themeName) };
             });
 

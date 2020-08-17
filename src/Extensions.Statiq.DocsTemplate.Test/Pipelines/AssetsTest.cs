@@ -15,7 +15,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Pipelines
     /// <summary>
     /// Tests for the <see cref="Assets"/> pipeline
     /// </summary>
-    public class AssetsTest : TemplateIntegrationTest
+    public class AssetsTest : IntegrationTestBase
     {
         private static readonly string[] EmptyThemeFiles =
         {

@@ -4,7 +4,8 @@ using NUnit.Framework;
 
 namespace Grynwald.Extensions.Statiq.DocsTemplate.Test
 {
-    public abstract class TemplateIntegrationTest
+    [TestFixture]
+    public abstract class IntegrationTestBase
     {
         protected TemporaryDirectory m_OutputDirectory = null!;  // value is set in SetUp(), called by NUnit
 

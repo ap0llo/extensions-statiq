@@ -3,7 +3,7 @@ using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 using Statiq.Common;
 
-namespace Grynwald.Extensions.Statiq.DocumentReferences.Test
+namespace Grynwald.Extensions.Statiq.DocsTemplate.Test
 {
     internal static class DocumentExtensions
     {

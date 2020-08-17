@@ -27,5 +27,11 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate
         }
 
         internal static NormalizedPath Prepend(this NormalizedPath path, string prefix) => new NormalizedPath(prefix) / path;
+
+        //TODO: Introduce a "common" project for extension method duplicated across projects
+        internal static NormalizedPath ToAbsolutePath(this NormalizedPath path, NormalizedPath absoluteTo)
+        {
+            return path.IsAbsolute ? path : absoluteTo.Combine(path);
+        }
     }
 }

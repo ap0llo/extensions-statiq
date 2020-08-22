@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using AngleSharp.Dom.Html;
 using ApprovalTests;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
@@ -30,7 +32,9 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
             return content;
         }
 
-        protected Bootstrapper CreateBootstrapper(string? themeName, string inputContent)
+        protected IHtmlDocument GetHtmlOutput() => LoadOutput().ParseAsHtml();
+
+        protected Bootstrapper CreateBootstrapper(string? themeName, string inputContent = "", IEnumerable<KeyValuePair<string, object>>? inputMetadata = null)
         {
             var bootstrapper = Bootstrapper.Factory
                 .CreateDefaultWithout(Array.Empty<string>(), DefaultFeatures.Pipelines)
@@ -42,7 +46,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
                 .BuildPipeline("TestPipeline", builder =>
                 {
                     builder
-                        .WithInputModules(new CreateDocuments(inputContent))
+                        .WithInputModules(new CreateDocuments(Tuple.Create(inputContent, inputMetadata)))
                         .WithProcessModules(new RenderUsingDocsTemplateTheme())
                         .WithOutputModules(
                             new SetDestination(s_OutputFileName),

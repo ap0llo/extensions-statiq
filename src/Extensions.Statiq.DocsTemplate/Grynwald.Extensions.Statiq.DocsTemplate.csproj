@@ -12,6 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Extensions.Statiq.DocumentReferences\Grynwald.Extensions.Statiq.DocumentReferences.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="input\theme\**\*.*" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 

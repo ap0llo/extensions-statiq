@@ -7,7 +7,7 @@ using Statiq.Testing;
 
 namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
 {
-    public partial class DefaultThemeIntegrationTest : ThemeIntegrationTestBase
+    public partial class DefaultThemeIntegrationTest
     {
         [TestCase(null, null, "")]
         [TestCase("", "", "")]

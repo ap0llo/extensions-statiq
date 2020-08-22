@@ -9,7 +9,7 @@ using Statiq.Testing;
 
 namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
 {
-    public partial class DefaultThemeIntegrationTest : ThemeIntegrationTestBase
+    public partial class DefaultThemeIntegrationTest
     {
         [Test]
         public async Task NavbarItems_are_not_included_if_input_document_has_no_NavbarItems_metadata()

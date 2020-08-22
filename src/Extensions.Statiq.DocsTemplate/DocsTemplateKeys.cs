@@ -40,5 +40,17 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate
         /// The link target of a navigation bar item.
         /// </summary>
         public const string Link = nameof(Link);
+
+        /// <summary>
+        /// A boolean specifying whether to include the version menu in the navigation bar.        
+        /// Default: <c>true</c>
+        /// </summary>
+        public const string ShowVersionMenu = nameof(ShowVersionMenu);
+
+        /// <summary>
+        /// Specifies the highlighting of versions in the version menu (as <see cref="DocsTemplate.VersionHighlightingMode"/>).
+        /// Default: <see cref="DocsTemplate.VersionHighlightingMode"/>
+        /// </summary>
+        public const string VersionHighlightingMode = nameof(VersionHighlightingMode);
     }
 }

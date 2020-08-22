@@ -1,8 +1,22 @@
 {
+    "$schema": "https://raw.githubusercontent.com/ap0llo/changelog/master/schemas/configuration/schema.json",
     "changelog": {
-    
         "integrations": {
             "provider": "GitHub"
-        }
+        },
+        "scopes": [
+            {
+                "name": "git",
+                "displayName": "Git Integration"
+            },
+            {
+                "name": "documentreferences",
+                "displayName": "Document References"
+            },
+            {
+                "name": "docstemplate",
+                "displayName": "Docs Template"
+            }
+        ]
     }
 }

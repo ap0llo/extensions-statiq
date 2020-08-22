@@ -9,7 +9,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Pipelines
     /// Pipeline to copy static assets required by the configured theme to the output.
     /// This pipeline is automatically added by <see cref="BootstrapperExtensions.AddDocsTemplate{TBootstrapper}(TBootstrapper)"/>
     /// </summary>
-    public class Assets : Pipeline
+    public sealed class Assets : Pipeline
     {
         public Assets()
         {

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using Grynwald.Extensions.Statiq.Git.Internal;
 using Grynwald.Utilities;
-using LibGit2Sharp;
 using Microsoft.Extensions.Logging;
 using Statiq.Common;
 using Globber = Grynwald.Extensions.Statiq.Git.Internal.Globber;
@@ -83,7 +80,7 @@ namespace Grynwald.Extensions.Statiq.Git
     ///     .WithBranchPatterns("main", "release/*")
     /// </code>
     /// </example>
-    public class ReadFilesFromGit : Module
+    public sealed class ReadFilesFromGit : Module
     {
         private readonly Config<string> m_RepositoryUrl;
         private IReadOnlyList<string>? m_BranchNames = null;

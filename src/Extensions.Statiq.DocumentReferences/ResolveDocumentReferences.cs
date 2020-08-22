@@ -26,7 +26,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences
     /// </para>
     /// </remarks>
     /// <seealso cref="SetDocsIdentity"/>
-    public class ResolveDocumentReferences : Module
+    public sealed class ResolveDocumentReferences : Module
     {
         private Config<DocumentIdentity> m_Identity = Config.FromDocument(d => d.Get<DocumentIdentity>(DocumentReferenceKeys.DocumentIdentity));
 

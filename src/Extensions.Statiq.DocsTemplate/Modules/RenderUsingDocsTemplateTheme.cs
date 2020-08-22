@@ -8,7 +8,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Modules
     /// <summary>
     /// Renders the input documents using the configured theme (see <see cref="DocsTemplateKeys.DocsTemplateThemeName"/>).
     /// </summary>
-    public class RenderUsingDocsTemplateTheme : Module
+    public sealed class RenderUsingDocsTemplateTheme : Module
     {
         /// <summary>
         /// The default Razor layout file name being used for rendering.

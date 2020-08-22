@@ -11,7 +11,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Modules
     /// Replaces links with a <c>theme:</c> uri scheme with a relative file path.
     /// Because this module accesses the documents' destination, this module must be called *after* the destination path has been set.
     /// </summary>
-    public class ResolveThemeLinks : Module
+    public sealed class ResolveThemeLinks : Module
     {
         public const string Scheme = "theme";
 

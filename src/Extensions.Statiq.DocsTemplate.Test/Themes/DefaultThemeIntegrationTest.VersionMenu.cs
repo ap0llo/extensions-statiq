@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -100,7 +99,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
             result.ExitCode.Should().Be(0);
 
             GetHtmlOutput()
-                .QuerySelector("#versionMenu a.nav-link.dropdown-toggle")
+                .QuerySelector("#versionMenu a.nav-link")
                 .TextContent.Trim()
                 .Should().Be(expectedText);
         }
@@ -130,6 +129,15 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
 
             dropdownItems.Select(x => x.GetAttribute("href"))
                 .Should().Equal(new[] { "ref:documentName@2.0", "ref:documentName@1.5", "ref:documentName@1.0" });
+
+            // nav item must be a dropdown toggle
+            html.QuerySelectorAll("#versionMenu li.nav-item")
+                .Should().ContainSingle()
+                .Which.ClassList.Should().Contain("dropdown");
+
+            html.QuerySelectorAll("#versionMenu li a.nav-link")
+                .Should().ContainSingle()
+                .Which.ClassList.Should().Contain("dropdown-toggle");
         }
 
         [Test]
@@ -190,8 +198,20 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Themes
 
             var html = GetHtmlOutput();
 
+            // there must not be a dropdown menu
             var dropdownItems = html.QuerySelectorAll("#versionMenu .dropdown-menu .dropdown-item");
             dropdownItems.Should().BeEmpty();
+
+            // the navbar item must not be a dropdown toggle
+            html.QuerySelectorAll("#versionMenu li.nav-item")
+                .Should().ContainSingle()
+                .Which.ClassList.Should().NotContain("dropdown");
+
+            html.QuerySelectorAll("#versionMenu li a.nav-link")
+                .Should().ContainSingle()
+                .Which.ClassList.Should().NotContain("dropdown-toggle");
+
+
         }
 
         //TODO: current item should be active => handled by MarkNavbarItemsAsActive?

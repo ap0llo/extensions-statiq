@@ -1,24 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{64115D43-25B6-43BC-BE4F-89FA85CF4A64}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.Git", "Extensions.Statiq.Git\Grynwald.Extensions.Statiq.Git.csproj", "{9F16856B-56FD-4D78-B5E5-4AC774A92BCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.Git", "Extensions.Statiq.Git\Grynwald.Extensions.Statiq.Git.csproj", "{9F16856B-56FD-4D78-B5E5-4AC774A92BCB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.Git.Test", "Extensions.Statiq.Git.Test\Grynwald.Extensions.Statiq.Git.Test.csproj", "{DFA13466-CD34-4881-A64C-C9E3F057934D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.Git.Test", "Extensions.Statiq.Git.Test\Grynwald.Extensions.Statiq.Git.Test.csproj", "{DFA13466-CD34-4881-A64C-C9E3F057934D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.DocumentReferences", "Extensions.Statiq.DocumentReferences\Grynwald.Extensions.Statiq.DocumentReferences.csproj", "{9353407B-BAA0-47D0-BE90-0B1348356E5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.DocumentReferences", "Extensions.Statiq.DocumentReferences\Grynwald.Extensions.Statiq.DocumentReferences.csproj", "{9353407B-BAA0-47D0-BE90-0B1348356E5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.DocumentReferences.Test", "Extensions.Statiq.DocumentReferences.Test\Grynwald.Extensions.Statiq.DocumentReferences.Test.csproj", "{AC20EE3D-6FC6-4AB3-84FE-59EB7E3D6381}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.DocumentReferences.Test", "Extensions.Statiq.DocumentReferences.Test\Grynwald.Extensions.Statiq.DocumentReferences.Test.csproj", "{AC20EE3D-6FC6-4AB3-84FE-59EB7E3D6381}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.DocsTemplate", "Extensions.Statiq.DocsTemplate\Grynwald.Extensions.Statiq.DocsTemplate.csproj", "{B24B0724-F1C1-4264-B9A3-A67F808FDD63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.DocsTemplate", "Extensions.Statiq.DocsTemplate\Grynwald.Extensions.Statiq.DocsTemplate.csproj", "{B24B0724-F1C1-4264-B9A3-A67F808FDD63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grynwald.Extensions.Statiq.DocsTemplate.Test", "Extensions.Statiq.DocsTemplate.Test\Grynwald.Extensions.Statiq.DocsTemplate.Test.csproj", "{374825E7-36A0-4089-977A-85BC2788A7DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grynwald.Extensions.Statiq.DocsTemplate.Test", "Extensions.Statiq.DocsTemplate.Test\Grynwald.Extensions.Statiq.DocsTemplate.Test.csproj", "{374825E7-36A0-4089-977A-85BC2788A7DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocsTemplate", "DocsTemplate", "{6C38DE93-BC00-401E-8E52-AFC924484433}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DocumentReferences", "DocumentReferences", "{AED99750-E96E-4E83-A106-1E9751E764F6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Git", "Git", "{F4070DE1-B543-45E9-B273-F5F2692BDEDC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,9 +34,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9F16856B-56FD-4D78-B5E5-4AC774A92BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -105,5 +108,19 @@ Global
 		{374825E7-36A0-4089-977A-85BC2788A7DF}.Release|x64.Build.0 = Release|Any CPU
 		{374825E7-36A0-4089-977A-85BC2788A7DF}.Release|x86.ActiveCfg = Release|Any CPU
 		{374825E7-36A0-4089-977A-85BC2788A7DF}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9F16856B-56FD-4D78-B5E5-4AC774A92BCB} = {F4070DE1-B543-45E9-B273-F5F2692BDEDC}
+		{DFA13466-CD34-4881-A64C-C9E3F057934D} = {F4070DE1-B543-45E9-B273-F5F2692BDEDC}
+		{9353407B-BAA0-47D0-BE90-0B1348356E5E} = {AED99750-E96E-4E83-A106-1E9751E764F6}
+		{AC20EE3D-6FC6-4AB3-84FE-59EB7E3D6381} = {AED99750-E96E-4E83-A106-1E9751E764F6}
+		{B24B0724-F1C1-4264-B9A3-A67F808FDD63} = {6C38DE93-BC00-401E-8E52-AFC924484433}
+		{374825E7-36A0-4089-977A-85BC2788A7DF} = {6C38DE93-BC00-401E-8E52-AFC924484433}		
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {59E4201D-4471-4198-9098-D97DBF4C593F}
 	EndGlobalSection
 EndGlobal

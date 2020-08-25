@@ -52,5 +52,38 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate
         /// Default: <see cref="DocsTemplate.VersionHighlightingMode"/>
         /// </summary>
         public const string VersionHighlightingMode = nameof(VersionHighlightingMode);
+
+        /// <summary>
+        /// A boolean specifying whether to include the table-of-contents in the output.
+        /// Default: <c>true</c>
+        /// </summary>
+        /// <remarks>
+        /// Requires metadata for table-of-contents to be set (see <see cref="ToC"/>)
+        /// </remarks>
+        public const string ShowToc = nameof(ShowToc);
+
+        /// <summary>
+        /// Data for the table-of-contents.
+        /// (as <see cref="global::Statiq.Common.IDocument[]"/>, each containing metadata for each table-of-contents entry)
+        /// </summary>
+        /// <remarks>
+        /// Use the <see cref="Modules.LoadToc"/> module to populate this metadata item.
+        /// </remarks>
+        public const string ToC = nameof(ToC);
+
+        /// <summary>
+        /// The id of the heading a table-of-contents entry references.
+        /// </summary>
+        public const string TocHeadingId = nameof(TocHeadingId);
+
+        /// <summary>
+        /// The title of a table-of-contents entry.
+        /// </summary>
+        public const string TocTitle = nameof(TocTitle);
+
+        /// <summary>
+        /// A table-of-contents entry's child items.
+        /// </summary>
+        public const string TocItems = nameof(TocItems);
     }
 }

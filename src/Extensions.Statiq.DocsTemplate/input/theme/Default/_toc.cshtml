@@ -1,0 +1,53 @@
+﻿@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+
+    var showToc = statiqDocument.GetBool(DocsTemplateKeys.ShowToc, defaultValue: true);
+    var toc = statiqDocument.GetDocuments(DocsTemplateKeys.ToC);
+}
+
+@if (showToc && toc != null)
+{
+    <div class="sticky-top sticky-offset">
+
+        <div id="toc" class="toc-container">
+            <div class="toc-header">
+                <h2>On This Page</h2>
+            </div>
+
+            <div class="toc-content">
+                <ul>
+                    @foreach (var tocEntry in toc)
+                    {
+                        var headingId = tocEntry.GetString(DocsTemplateKeys.TocHeadingId);
+
+                        <li>
+                            @if (String.IsNullOrEmpty(headingId))
+                            {
+                                @tocEntry.GetString(DocsTemplateKeys.TocTitle)
+                            }
+                            else
+                            {
+                                <a href="#@headingId">@tocEntry.GetString(DocsTemplateKeys.TocTitle)</a>
+                            }
+                            @{
+                                var children = tocEntry.GetDocuments(DocsTemplateKeys.TocItems);
+                            }
+                            @if (children != null && children.Any())
+                            {
+                                <ul>
+                                    @foreach (var child in children)
+                                    {
+                                        <li><a href="#@child.GetString(DocsTemplateKeys.TocHeadingId)">@child.GetString(DocsTemplateKeys.TocTitle)</a></li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+    </div>
+}

@@ -1,3 +1,28 @@
 ﻿main {
     margin-top: 70px;
 }
+
+
+.toc-container {
+    margin-top: 50px;
+}
+
+.toc-header h2 {
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.toc-content ul {
+    list-style-type: none;
+    padding-left: 0;
+    font-size: 0.9em;
+    color: gray;
+}
+
+.sticky-offset {
+    top: 120px;
+}
+
+.toc-content ul li ul {
+    padding-left: 15px;
+}

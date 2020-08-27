@@ -32,7 +32,8 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Pipelines
             "assets/js/highlight.js/highlight.min.js",
             "assets/css/highlight.js/styles/default.min.css",
             "assets/js/jquery/jquery.min.js",
-            "assets/js/popper.js/popper.min.js"
+            "assets/js/popper.js/popper.min.js",
+            "assets/js/mermaid/dist/mermaid.min.js"
         };
 
 

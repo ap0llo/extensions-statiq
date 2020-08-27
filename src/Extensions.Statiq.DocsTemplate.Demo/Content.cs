@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+﻿using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
 using Grynwald.Extensions.Statiq.DocumentReferences;
 using Grynwald.Extensions.Statiq.Git;
 using Statiq.Common;
@@ -17,27 +16,11 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Demo
             {
                 new ReadFilesFromGit(Config.FromSetting("GitRemoteUrl"))
                     .WithBranchNames("master", "release/*")
-                    .WithFileNames("docs/**/*.md", "docs/docs.yml"),
+                    .WithFileNames("docs/**/*.md", "docs/**/docs.yml"),
 
-                new ExecuteConfig(Config.FromDocument(async (document, ctx) => {
+                new ReadDirectoryMetadataFromInputFiles("docs.yml", new ParseYaml()),
+                new FilterDocuments(Config.FromDocument(d => d.GetGitRelativePath().Name != "docs.yml")),
 
-                    var branch = document.GetString(GitKeys.GitBranch);
-
-                    var metadata = (await ctx.ExecuteModulesAsync(new ModuleList()
-                    {
-                        new FilterDocuments(Config.FromDocument(d =>
-                            d.GetString(GitKeys.GitRelativePath) == "docs/docs.yml" &&
-                            d.GetString(GitKeys.GitBranch) == branch)),
-                        new ParseYaml()
-                    },
-                    ctx.Inputs)).Single();
-
-                    var newMetadata = metadata.Where(kvp => !document.ContainsKey(kvp.Key));
-
-                    return document.Clone(newMetadata);
-                })),
-
-                new FilterDocuments(Config.FromDocument(d => d.GetGitRelativePath().Extension == ".md")),
                 new ExtractFrontMatter(new ParseYaml()),
                 new SetDocumentReferenceMetadata(
                     Config.FromDocument(document => document.GetString("documentName") ?? document.GetGitRelativePath().ToString()),

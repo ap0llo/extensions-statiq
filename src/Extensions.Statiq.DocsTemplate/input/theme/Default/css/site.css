@@ -2,7 +2,6 @@
     margin-top: 70px;
 }
 
-
 .toc-container {
     margin-top: 50px;
 }
@@ -25,4 +24,13 @@
 
 .toc-content ul li ul {
     padding-left: 15px;
+}
+
+.content h2:before,
+.content h3:before {
+    display: block;
+    content: " ";
+    margin-top: -70px;
+    height: 70px;
+    visibility: hidden;
 }

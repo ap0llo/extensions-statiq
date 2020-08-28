@@ -14,19 +14,33 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Demo
         {
             InputModules = new ModuleList()
             {
+                // Read files from git
                 new ReadFilesFromGit(Config.FromSetting("GitRemoteUrl"))
-                    .WithBranchNames("master", "release/*")
+                    .WithBranchNames("master")
+                    .WithTagNames("v*")
                     .WithFileNames("docs/**/*.md", "docs/**/docs.yml"),
 
+                // Parse docs.yml and then remote it from the documents
                 new ReadDirectoryMetadataFromInputFiles("docs.yml", new ParseYaml()),
                 new FilterDocuments(Config.FromDocument(d => d.GetGitRelativePath().Name != "docs.yml")),
 
+                // Parse document front matter
                 new ExtractFrontMatter(new ParseYaml()),
+
+                // For documents read from tags, infer version from tag name
+                new ExecuteIf(
+                    Config.FromDocument(d => d.GetGitTag() != null),
+                    new SetMetadata("version", Config.FromDocument(d => d.GetGitTag().TrimStart('v')))
+                ),
+                
+                // Assign document reference metadata
                 new SetDocumentReferenceMetadata(
                     Config.FromDocument(document => document.GetString("documentName") ?? document.GetGitRelativePath().ToString()),
                     Config.FromDocument(document => document.GetString("version"))
                 ),
-                new GatherVersions(),
+               
+                // add metadata about other version of a document to the metadata
+                new GatherVersions()
             };
 
             ProcessModules = new ModuleList()

@@ -18,15 +18,13 @@
       "destination": "input/theme/Default/dependencies/popper.js/"
     },
     {
-      "provider": "unpkg",
-      "library": "bootstrap@4.5.0",
-      "files": [ "dist/css/bootstrap.min.css", "dist/js/bootstrap.min.js" ],
+      "library": "twitter-bootstrap@4.5.2",
+      "files": [ "js/bootstrap.min.js", "css/bootstrap.min.css" ],
       "destination": "input/theme/Default/dependencies/bootstrap/"
     },
     {
-      "provider": "unpkg",
       "library": "mermaid@8.7.0",
-      "files": ["dist/mermaid.min.js"],
+      "files": ["mermaid.min.js"],
       "destination": "input/theme/Default/dependencies/mermaid/"
     }
   ]

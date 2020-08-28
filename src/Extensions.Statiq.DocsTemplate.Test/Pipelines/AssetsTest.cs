@@ -27,13 +27,13 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Pipelines
         {
             "assets/js/site.js",
             "assets/css/site.css",
-            "assets/css/bootstrap/dist/css/bootstrap.min.css",
-            "assets/js/bootstrap/dist/js/bootstrap.min.js",
+            "assets/css/bootstrap/css/bootstrap.min.css",
+            "assets/js/bootstrap/js/bootstrap.min.js",
             "assets/js/highlight.js/highlight.min.js",
             "assets/css/highlight.js/styles/default.min.css",
             "assets/js/jquery/jquery.min.js",
             "assets/js/popper.js/popper.min.js",
-            "assets/js/mermaid/dist/mermaid.min.js"
+            "assets/js/mermaid/mermaid.min.js"
         };
 
 

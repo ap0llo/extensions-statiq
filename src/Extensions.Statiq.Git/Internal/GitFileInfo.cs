@@ -10,6 +10,9 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         private readonly GitDirectoryInfo m_Parent;
         private readonly Blob m_Blob;
 
+
+        public GitId Commit => m_Parent.Commit;
+
         public override string Name { get; }
 
         public override string FullName

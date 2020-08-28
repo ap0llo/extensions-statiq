@@ -44,6 +44,23 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             return new GitId(commitId);
         }
 
+        protected GitTag GitTag(string name, GitId? target = null)
+        {
+            if (target is null)
+            {
+                Git($"tag {name}");
+            }
+            else
+            {
+                Git($"tag {name} {target}");
+            }
+
+            Git($"rev-parse --short {name}", out var commitId);
+            commitId = commitId.Trim();
+
+            return new GitTag(name, new GitId(commitId));
+        }
+
         protected void Git(string command) => Git(command, out _, out _);
 
         protected void Git(string command, out string stdOut) => Git(command, out stdOut, out _);

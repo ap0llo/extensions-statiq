@@ -164,5 +164,46 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             // ASSERT
             currentBranch.Should().Be("my-default-branch");
         }
+
+        [Test]
+        public void Tags_returns_empty_enumerable_if_there_are_no_tags()
+        {
+            // ARRANGE
+            GitCommit(allowEmtpy: true);
+
+            using var sut = CreateInstance(m_WorkingDirectory);
+
+            // ACT
+            var tags = sut.Tags;
+
+            // ASSERT
+            tags.Should().NotBeNull().And.BeEmpty();
+        }
+
+
+        [Test]
+        public void Tags_returns_expected_tags()
+        {
+            // ARRANGE
+            var commit1 = GitCommit(allowEmtpy: true);
+            _ = GitCommit(allowEmtpy: true);
+            var commit3 = GitCommit(allowEmtpy: true);
+
+            var tag1 = GitTag("my-tag-1", commit1);
+            var tag2 = GitTag("my-tag-2", commit3);
+
+            using var sut = CreateInstance(m_WorkingDirectory);
+
+            // ACT
+            var tags = sut.Tags;
+
+            // ASSERT
+            tags
+                .Should().NotBeNull()
+                .And.HaveCount(2)
+                .And.Contain(tag1)
+                .And.Contain(tag2);
+        }
+
     }
 }

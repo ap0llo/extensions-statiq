@@ -24,7 +24,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             using var repository = new Repository(m_WorkingDirectory);
 
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             sut.Name.Should().Be("");
             sut.FullName.Should().Be("");
@@ -40,8 +40,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         public void Constructor_throws_ArgumentException_for_invalid_names(string name)
         {
             using var repository = new Repository(m_WorkingDirectory);
+            var root = new GitDirectoryInfo(repository.Head.Tip);
 
-            Action act = () => new GitDirectoryInfo(name, new GitDirectoryInfo(repository.Head.Tip.Tree), repository.Head.Tip.Tree);
+            Action act = () => new GitDirectoryInfo(root.Commit, name, root, repository.Head.Tip.Tree);
             act.Should().Throw<ArgumentException>();
         }
 
@@ -49,13 +50,14 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         public void Constructor_throws_ArgumentException_if_parent_is_null()
         {
             using var repository = new Repository(m_WorkingDirectory);
+            var commitId = repository.Head.Tip.GetGitId();
 
-            Action act = () => new GitDirectoryInfo("dir", null!, repository.Head.Tip.Tree);
+            Action act = () => new GitDirectoryInfo(commitId, "dir", null!, repository.Head.Tip.Tree);
             act.Should().Throw<ArgumentNullException>();
         }
 
         [Test]
-        public void Constructor_throws_ArgumentException_if_tree_of_root_directory_is_null()
+        public void Constructor_throws_ArgumentException_if_Commit_is_null()
         {
             Action act = () => new GitDirectoryInfo(null!);
             act.Should().Throw<ArgumentNullException>();
@@ -65,8 +67,9 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         public void Constructor_throws_ArgumentException_if_tree_is_null()
         {
             using var repository = new Repository(m_WorkingDirectory);
+            var root = new GitDirectoryInfo(repository.Head.Tip);
 
-            Action act = () => new GitDirectoryInfo("dir", new GitDirectoryInfo(repository.Head.Tip.Tree), null!);
+            Action act = () => new GitDirectoryInfo(root.Commit, "dir", root, null!);
             act.Should().Throw<ArgumentNullException>();
         }
 
@@ -75,7 +78,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             using var repository = new Repository(m_WorkingDirectory);
 
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             sut.EnumerateFileSystemInfos()
                 .Should().NotBeNull()
@@ -104,7 +107,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             using var repository = new Repository(m_WorkingDirectory);
 
             // ACT
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
             var fileSystemInfos = sut.EnumerateFileSystemInfos();
 
             // ASSERT
@@ -144,7 +147,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             using var repository = new Repository(m_WorkingDirectory);
 
             // ACT
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             // ASSERT
             sut.GetDirectory(path)
@@ -160,7 +163,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             // ARRANGE            
             using var repository = new Repository(m_WorkingDirectory);
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             // ACT
             var dir = sut.GetDirectory(path);
@@ -198,7 +201,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             using var repository = new Repository(m_WorkingDirectory);
 
             // ACT
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             // ASSERT
             sut.GetFile(path)
@@ -218,7 +221,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             // ARRANGE            
             using var repository = new Repository(m_WorkingDirectory);
-            var sut = new GitDirectoryInfo(repository.Head.Tip.Tree);
+            var sut = new GitDirectoryInfo(repository.Head.Tip);
 
             // ACT
             var file = sut.GetFile(path);

@@ -15,6 +15,8 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         private readonly Lazy<Dictionary<string, GitFileInfo>> m_Files;
 
 
+        public GitId Commit { get; }
+
         public override string Name { get; }
 
         public override string FullName
@@ -34,17 +36,21 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         public IEnumerable<GitFileInfo> Files => m_Files.Value.Values;
 
 
-        public GitDirectoryInfo(Tree tree)
+        public GitDirectoryInfo(Commit commit)
         {
+            if (commit is null)
+                throw new ArgumentNullException(nameof(commit));
+
+            Commit = commit.GetGitId();
             Name = "";
             m_Parent = null;
-            m_Tree = tree ?? throw new ArgumentNullException(nameof(tree));
+            m_Tree = commit.Tree;
 
             m_Directories = new Lazy<Dictionary<string, GitDirectoryInfo>>(LoadDirectories);
             m_Files = new Lazy<Dictionary<string, GitFileInfo>>(LoadFiles);
         }
 
-        public GitDirectoryInfo(string name, GitDirectoryInfo parent, Tree tree)
+        public GitDirectoryInfo(GitId commit, string name, GitDirectoryInfo parent, Tree tree)
         {
             if (String.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(name));
@@ -52,6 +58,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             if (name.Contains("\\") || name.Contains("/"))
                 throw new ArgumentException("Name must not contain directory separators", nameof(name));
 
+            Commit = commit;
             Name = name;
             m_Parent = parent ?? throw new ArgumentNullException(nameof(parent));
             m_Tree = tree ?? throw new ArgumentNullException(nameof(tree));
@@ -116,7 +123,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             {
                 if (item.Target is Tree subTree)
                 {
-                    var dir = new GitDirectoryInfo(item.Name, this, subTree);
+                    var dir = new GitDirectoryInfo(Commit, item.Name, this, subTree);
                     directories.Add(item.Name, dir);
                 }
             }

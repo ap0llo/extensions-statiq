@@ -15,6 +15,11 @@ namespace Grynwald.Extensions.Statiq.Git
         public static string GetGitBranch(this IMetadata metadata) => metadata.GetString(GitKeys.GitBranch);
 
         /// <summary>
+        /// Gets the value for the <see cref="GitKeys.GitTag"/> key.
+        /// </summary>
+        public static string GetGitTag(this IMetadata metadata) => metadata.GetString(GitKeys.GitTag);
+
+        /// <summary>
         /// Gets the value for the <see cref="GitKeys.GitCommit"/> key.
         /// </summary>
         public static string GetGitCommit(this IMetadata metadata) => metadata.GetString(GitKeys.GitCommit);

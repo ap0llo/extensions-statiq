@@ -168,8 +168,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             // ASSERT
             outputs.Should().HaveCount(2);
 
-            var output1 = outputs.Single(x => x.GetString(GitKeys.GitBranch) == "master");
-            var output2 = outputs.Single(x => x.GetString(GitKeys.GitBranch) == "branch2");
+            var output1 = outputs.Single(x => x.GetGitBranch() == "master");
+            var output2 = outputs.Single(x => x.GetGitBranch() == "branch2");
 
             (await output1.GetContentStringAsync()).Should().Be("Content 1\n");
             (await output2.GetContentStringAsync()).Should().Be("Content 2\n");
@@ -180,6 +180,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             output1
                 .Should().Contain(x => x.Key == GitKeys.GitBranch)
                 .Which.Value.Should().Be("master");
+            output1
+                .Should().NotContain(x => x.Key == GitKeys.GitTag);
             output1
                 .Should().Contain(x => x.Key == GitKeys.GitCommit)
                 .Which.Value
@@ -197,6 +199,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitBranch)
                 .Which.Value.Should().Be("branch2");
+            output2
+                .Should().NotContain(x => x.Key == GitKeys.GitTag);
             output2
                 .Should().Contain(x => x.Key == GitKeys.GitCommit)
                 .Which.Value
@@ -229,12 +233,11 @@ namespace Grynwald.Extensions.Statiq.Git.Test
             // ASSERT
             outputs.Should().BeEmpty();
 
-            var message = m_TestExecutionContext.LogMessages.Should().ContainSingle().Which;
-
-            message.LogLevel.Should().Be(LogLevel.Warning);
+            m_TestExecutionContext.LogMessages.Should().OnlyContain(x => x.LogLevel == LogLevel.Warning);
             foreach (var pattern in patterns)
             {
-                message.FormattedMessage.Should().Contain($"'{pattern}'");
+                m_TestExecutionContext.LogMessages
+                    .Should().Contain(message => message.FormattedMessage.Contains($"'{pattern}'"));
             }
         }
 
@@ -268,9 +271,131 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                     .And.Be((NormalizedPath)"file2.txt");
         }
 
+        [Test]
+        public async Task Execute_reads_no_documents_if_branches_are_ignored()
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            _ = GitCommit(allowEmtpy: true);
+            CreateFile("file1.txt");
+            GitAdd();
+            GitCommit();
+
+            var sut = new ReadFilesFromGit(repositoryUrl, "*")
+                .IgnoreBranches();
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task Execute_returns_file_from_multiple_tags()
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+
+            var initialCommit = GitCommit(allowEmtpy: true);
+            CreateFile("file1.txt", "Content 1");
+            GitAdd();
+            var commit1 = GitCommit();
+            var tag1 = GitTag("tag1", commit1);
+
+            Git($"checkout {initialCommit} -b branch2");
+            CreateFile("file2.txt", "Content 2");
+            GitAdd();
+            var commit2 = GitCommit();
+            var tag2 = GitTag("another-tag", commit2);
+
+            var sut = new ReadFilesFromGit(repositoryUrl, "*")
+                .IgnoreBranches()
+                .WithTagNames("tag1", "another-*");
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs.Should().HaveCount(2);
+
+            var output1 = outputs.Single(x => x.GetGitTag() == "tag1");
+            var output2 = outputs.Single(x => x.GetGitTag() == "another-tag");
+
+            (await output1.GetContentStringAsync()).Should().Be("Content 1\n");
+            (await output2.GetContentStringAsync()).Should().Be("Content 2\n");
+
+            output1
+                .Should().Contain(x => x.Key == GitKeys.GitRepositoryUrl)
+                .Which.Value.Should().Be(repositoryUrl);
+            output1
+                .Should().NotContain(x => x.Key == GitKeys.GitBranch);
+            output1
+                .Should().Contain(x => x.Key == GitKeys.GitTag)
+                .Which.Value.Should().Be("tag1");
+            output1
+                .Should().Contain(x => x.Key == GitKeys.GitCommit)
+                .Which.Value
+                    .Should().BeAssignableTo<string>()
+                    .And.Be(commit1.Id);
+            output1
+                .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
+                .Which.Value
+                    .Should().BeAssignableTo<NormalizedPath>()
+                    .And.Be((NormalizedPath)"file1.txt");
+
+            output2
+                 .Should().Contain(x => x.Key == GitKeys.GitRepositoryUrl)
+                 .Which.Value.Should().Be(repositoryUrl);
+            output2
+                .Should().NotContain(x => x.Key == GitKeys.GitBranch);
+            output2
+                .Should().Contain(x => x.Key == GitKeys.GitTag)
+                .Which.Value.Should().Be("another-tag");
+            output2
+                .Should().Contain(x => x.Key == GitKeys.GitCommit)
+                .Which.Value
+                    .Should().BeAssignableTo<string>()
+                    .And.Be(commit2.Id);
+            output2
+                .Should().Contain(x => x.Key == GitKeys.GitRelativePath)
+                .Which.Value
+                    .Should().BeAssignableTo<NormalizedPath>()
+                    .And.Be((NormalizedPath)"file2.txt");
+        }
+
+        [Test]
+        public async Task Execute_emits_warning_if_no_tags_match_the_specified_names()
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            CreateFile("file1.txt");
+            GitAdd();
+            GitCommit();
+
+            var patterns = new[] { "tag1*", "tag2*" };
+
+            var sut = new ReadFilesFromGit(repositoryUrl, "*")
+                .IgnoreBranches()
+                .WithTagNames(patterns);
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs.Should().BeEmpty();
+
+            m_TestExecutionContext.LogMessages.Should().OnlyContain(x => x.LogLevel == LogLevel.Warning);
+            foreach (var pattern in patterns)
+            {
+                m_TestExecutionContext.LogMessages
+                    .Should().Contain(message => message.FormattedMessage.Contains($"'{pattern}'"));
+            }
+        }
+
         [TestCase("master")]
         [TestCase("some/other/branch")]
-        public async Task Execute_adds_a_placeholder_source_path_to_the_documents(string branchName)
+        public async Task Execute_adds_a_placeholder_source_path_to_the_documents_read_from_branches(string branchName)
         {
             // ARRANGE
             Git($"checkout -b {branchName}");
@@ -294,5 +419,31 @@ namespace Grynwald.Extensions.Statiq.Git.Test
                         .And.Contain("/git/");
         }
 
+        [TestCase("tag1")]
+        [TestCase("another-tag")]
+        public async Task Execute_adds_a_placeholder_source_path_to_the_documents_read_from_tags(string tagName)
+        {
+            // ARRANGE
+            var repositoryUrl = m_WorkingDirectory.FullName;
+            CreateFile("dir1/file1.txt");
+            GitAdd();
+            GitTag(tagName, GitCommit());
+
+            var sut = new ReadFilesFromGit(repositoryUrl)
+                .IgnoreBranches()
+                .WithTagNames(tagName);
+
+            // ACT
+            var outputs = await ExecuteAsync(sut);
+
+            // ASSERT
+            outputs
+                .Should().ContainSingle()
+                .Which.Source
+                    .Should().Match<NormalizedPath>(x => !x.IsNull)
+                    .And.Subject.ToString()
+                        .Should().EndWith($"{tagName}/dir1/file1.txt")
+                        .And.Contain("/git/");
+        }
     }
 }

@@ -11,7 +11,7 @@ using Globber = Grynwald.Extensions.Statiq.Git.Internal.Globber;
 namespace Grynwald.Extensions.Statiq.Git
 {
     /// <summary>
-    /// Reads files from a git repository (from one or more branches)
+    /// Reads files from a git repository (from one or more branches or tags)
     /// </summary>
     /// <remarks>
     /// This modules allows reading a file from a git repository.
@@ -28,19 +28,22 @@ namespace Grynwald.Extensions.Statiq.Git
     /// </para>
     /// <para>
     /// By default, data will be read from the repository's default branch.
-    /// To specify a different branch (or multiple branches), use <see cref="WithBranchNames(String[])"/>.
+    /// To specify a different branch (or multiple branches), use <see cref="WithBranchNames(String[])"/> (supports wildcards).
+    /// </para>
+    /// <para>
+    /// To read files from the repository's tags, specify one or more tag names using <see cref="WithTagsNames(String[])"/> (supports wildcards).
     /// </para>
     /// <para>
     /// The module will add "placeholder" paths for the document's <see cref="IDocument.Source"/> and <see cref="IDocument.Destination"/> properties.
-    /// The placeholder destination path uses the format <c>git/REPOURLHASH/BRANCHNAME/RELATIVEPATH</c>:
+    /// The placeholder destination path uses the format <c>git/REPOURLHASH/REFNAME/RELATIVEPATH</c>:
     /// <list type="bullet">
     ///     <item>
     ///         <term><c>REPOURLHASH</c></term>
     ///         <description>The SHA1-hash of the repository url the file was read from.</description>
     ///     </item>
     ///     <item>
-    ///         <term><c>BRANCHNAME</c></term>
-    ///         <description>The name of the branch the document was read from.</description>
+    ///         <term><c>REFNAME</c></term>
+    ///         <description>The name of the branch or tag the document was read from.</description>
     ///     </item>
     ///     <item>
     ///         <term><c>RELATIVEPATH</c></term>
@@ -60,7 +63,11 @@ namespace Grynwald.Extensions.Statiq.Git
     ///     </item>
     ///     <item>
     ///         <term><see cref="GitKeys.GitBranch"/></term>
-    ///         <description>The name of the branch the document was read from.</description>
+    ///         <description>The name of the branch the document was read from (not set when file was read from a tag).</description>
+    ///     </item>
+    ///     <item>
+    ///         <term><see cref="GitKeys.GitTag"/></term>
+    ///         <description>The name of the tag the document was read from (not set when file was read from a branch).</description>
     ///     </item>
     ///     <item>
     ///         <term><see cref="GitKeys.GitCommit"/></term>
@@ -84,6 +91,7 @@ namespace Grynwald.Extensions.Statiq.Git
     {
         private readonly Config<string> m_RepositoryUrl;
         private IReadOnlyList<string>? m_BranchNames = null;
+        private IReadOnlyList<string>? m_TagNames = null;
         private IReadOnlyList<string> m_FilePatterns;
 
 
@@ -121,11 +129,29 @@ namespace Grynwald.Extensions.Statiq.Git
         /// </summary>
         /// <remarks>
         /// By default, documents are read from the repository's default branch.
-        /// Supports wildcards, (e.g. <c>release/*</c>) to read branches from all branches matching the pattern.
+        /// Supports wildcards, (e.g. <c>release/*</c>) to read documents from all branches matching the pattern.
         /// </remarks>
         public ReadFilesFromGit WithBranchNames(params string[] branchNames)
         {
             m_BranchNames = branchNames.ToArray();
+            return this;
+        }
+
+        /// <summary>
+        /// Remove all branch names (do not read files from any branch)
+        /// </summary>
+        public ReadFilesFromGit IgnoreBranches() => WithBranchNames(Array.Empty<string>());
+
+        /// <summary>
+        /// Sets the names of the tags to read from the repository.
+        /// </summary>
+        /// <remarks>
+        /// By default, no documents are read from the repository's tag.
+        /// Supports wildcards, (e.g. <c>release_*</c>) to read documens from all tags matching the pattern.
+        /// </remarks>
+        public ReadFilesFromGit WithTagNames(params string[] tagNames)
+        {
+            m_TagNames = tagNames.ToArray();
             return this;
         }
 
@@ -141,22 +167,77 @@ namespace Grynwald.Extensions.Statiq.Git
             return this;
         }
 
+
         protected override async Task<IEnumerable<IDocument>> ExecuteContextAsync(IExecutionContext context)
         {
             m_RepositoryUrl.EnsureNonDocument();
             var repositoryUrl = await m_RepositoryUrl.GetValueAsync(null, context);
 
-            var repositoryUrlHash = repositoryUrl.ComputeHashString();
 
             // load repository
             using var repository = GitRepositoryFactory.GetRepository(repositoryUrl);
 
+            var matchingBranches = GetMatchingBranches(context, repository);
+            var matchingTags = GetMatchingTags(context, repository);
+
+            if (!matchingBranches.Any() && !matchingTags.Any())
+            {
+                context.LogWarning("No branches or tags found that match any of the specified tag or branch names");
+                return Enumerable.Empty<IDocument>();
+            }
+
+            var outputs = new List<IDocument>();
+
+            // for each branch, read documents and add them to the output.
+            foreach (var branchName in matchingBranches)
+            {
+                var commitId = repository.GetHeadCommitId(branchName);
+                var rootDir = repository.GetRootDirectory(commitId);
+
+                var branchOutputs = Globber
+                    .GetFiles(rootDir, m_FilePatterns)
+                    .Select(file =>
+                        ReadFile(
+                            context: context,
+                            repository: repository,
+                            file: file, branchName: branchName,
+                            tagName: null)
+                        );
+
+                outputs.AddRange(branchOutputs);
+            }
+
+            // for each tag, read documents and add them to the output.
+            foreach (var tag in matchingTags)
+            {
+                var rootDir = repository.GetRootDirectory(tag.Commit);
+
+                var tagOutputs = Globber
+                    .GetFiles(rootDir, m_FilePatterns)
+                    .Select(file =>
+                        ReadFile(
+                            context: context, repository: repository,
+                            file: file,
+                            branchName: null,
+                            tagName: tag.Name)
+                        );
+
+                outputs.AddRange(tagOutputs);
+            }
+
+            return outputs;
+        }
+
+
+        private IReadOnlyList<string> GetMatchingBranches(IExecutionContext context, IGitRepository repository)
+        {
             IReadOnlyList<string> matchingBranches;
+
             if (m_BranchNames is null)
             {
                 matchingBranches = new[] { repository.CurrentBranch };
             }
-            else
+            else if (m_BranchNames.Any())
             {
                 var branchPatterns = m_BranchNames.Select(x => new Wildcard(x)).ToList();
 
@@ -170,47 +251,75 @@ namespace Grynwald.Extensions.Statiq.Git
                     context.LogWarning($"The repository contains no branches matching any of the configured names {String.Join(", ", m_BranchNames.Select(x => $"'{x}'"))}");
                 }
             }
-
-            if (!matchingBranches.Any())
+            else
             {
-                return Enumerable.Empty<IDocument>();
+                matchingBranches = Array.Empty<string>();
             }
 
-            var outputs = new List<IDocument>();
+            return matchingBranches;
+        }
 
-            // for each branch, read documents and add them to the output.
-            foreach (var branchName in matchingBranches)
+        private IReadOnlyList<GitTag> GetMatchingTags(IExecutionContext context, IGitRepository repository)
+        {
+            IReadOnlyList<GitTag> matchingTags;
+            if (m_TagNames is null)
             {
-                var commitId = repository.GetHeadCommitId(branchName);
-                var rootDir = repository.GetRootDirectory(commitId);
+                matchingTags = Array.Empty<GitTag>();
+            }
+            else if (m_TagNames.Any())
+            {
+                var tagPatterns = m_TagNames.Select(x => new Wildcard(x)).ToList();
 
-                var branchOutputs = Globber.GetFiles(rootDir, m_FilePatterns).Select(file =>
+                // get tags matching the patterns
+                matchingTags = repository.Tags
+                  .Where(tag => tagPatterns.Any(pattern => pattern.IsMatch(tag.Name)))
+                  .ToList();
+
+                if (!matchingTags.Any())
                 {
-                    var placeholderDestinationPath = new NormalizedPath(repositoryUrlHash).Combine(branchName).Combine(file.FullName);
-                    var placeholderSourcePath = context.FileSystem.RootPath
-                        .Combine("git")
-                        .Combine(placeholderDestinationPath);
-
-                    var metadata = new Dictionary<string, object>()
-                    {
-                        { GitKeys.GitRepositoryUrl, repositoryUrl },
-                        { GitKeys.GitBranch, branchName },
-                        { GitKeys.GitCommit, commitId.ToString() },
-                        { GitKeys.GitRelativePath, new NormalizedPath(file.FullName) },
-                    };
-
-                    using var stream = file.GetContentStream();
-                    return context.CreateDocument(
-                        source: placeholderSourcePath,
-                        destination: placeholderDestinationPath,
-                        stream: stream)
-                    .Clone(metadata);
-                });
-
-                outputs.AddRange(branchOutputs);
+                    context.LogWarning($"The repository contains no tags matching any of the configured tag names {String.Join(", ", m_TagNames.Select(x => $"'{x}'"))}");
+                }
+            }
+            else
+            {
+                matchingTags = Array.Empty<GitTag>();
             }
 
-            return outputs;
+            return matchingTags;
+        }
+
+        private IDocument ReadFile(IExecutionContext context, IGitRepository repository, GitFileInfo file, string? branchName, string? tagName)
+        {
+            if (branchName is null && tagName is null)
+                throw new InvalidOperationException();
+
+            var repositoryUrlHash = repository.Url.ComputeHashString();
+
+            var placeholderDestinationPath = new NormalizedPath(repositoryUrlHash).Combine(branchName ?? tagName).Combine(file.FullName);
+            var placeholderSourcePath = context.FileSystem.RootPath
+                .Combine("git")
+                .Combine(placeholderDestinationPath);
+
+            var metadata = new Dictionary<string, object>()
+            {
+                { GitKeys.GitRepositoryUrl, repository.Url },
+                { GitKeys.GitCommit, file.Commit.ToString() },
+                { GitKeys.GitRelativePath, new NormalizedPath(file.FullName) },
+            };
+
+            if (branchName is object)
+                metadata.Add(GitKeys.GitBranch, branchName);
+
+            if (tagName is object)
+                metadata.Add(GitKeys.GitTag, tagName);
+
+            using var stream = file.GetContentStream();
+
+            return context.CreateDocument(
+                source: placeholderSourcePath,
+                destination: placeholderDestinationPath,
+                stream: stream)
+            .Clone(metadata);
         }
     }
 }

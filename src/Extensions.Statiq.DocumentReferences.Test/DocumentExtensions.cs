@@ -5,9 +5,10 @@ using Statiq.Common;
 
 namespace Grynwald.Extensions.Statiq.DocumentReferences.Test
 {
-    public static class DocumentExtensions
+    internal static class DocumentExtensions
     {
-        public static async Task<IHtmlDocument> ParseAsHtmlAsync(this IDocument document)
+        //TODO: Introduce a "common" project for extension method duplicated across projects
+        internal static async Task<IHtmlDocument> ParseAsHtmlAsync(this IDocument document)
         {
             var html = await document.GetContentStringAsync();
             var htmlDocument = new HtmlParser().Parse(html);

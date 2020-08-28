@@ -1,0 +1,68 @@
+﻿@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+@using Grynwald.Extensions.Statiq.DocumentReferences;
+
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+
+    var showVersionMenu = statiqDocument.GetBool(DocsTemplateKeys.ShowVersionMenu, defaultValue: true);
+
+    var documentName = statiqDocument.GetDocumentName();
+    var documentVersion = statiqDocument.GetDocumentVersion();
+
+    var highlightingMode = statiqDocument.Get<VersionHighlightingMode>(DocsTemplateKeys.VersionHighlightingMode, defaultValue: VersionHighlightingMode.LatestVersion);
+
+    var highlightLatestVersion = highlightingMode == VersionHighlightingMode.LatestVersion;
+    var highlightLatestDocumentVersion = highlightingMode == VersionHighlightingMode.LatestDocumentVersion;
+
+    var allVersions = statiqDocument.GetDocuments(DocumentReferenceKeys.AllDocumentVersions);
+
+
+    // Add drop down menu with links to other versions, but skip dropdown if there are not at least 2 versions
+    // (a dropdown menu with a single item does not make sense)
+    var hasDropDown = allVersions != null && allVersions.Skip(1).Any();
+}
+
+
+@if (showVersionMenu && documentName != null && documentVersion != null)
+{
+    <ul class="navbar-nav ml-md-auto" id="versionMenu">
+        @{
+            var isLatestVersion = documentVersion == statiqDocument.GetLatestVersion();
+            var isLatestDocumentVersion = documentVersion == statiqDocument.GetLatestDocumentVersion();
+        }
+
+        @if (hasDropDown)
+        {
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" id="versionDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Version: @documentVersion @((highlightLatestVersion && isLatestVersion) || (highlightLatestDocumentVersion && isLatestDocumentVersion) ? "(latest)" : "")
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="versionDropdown">
+                    @foreach (var versionData in allVersions.OrderByDescending(x => x.GetDocumentVersion()))
+                    {
+                        var versionDisplayName = $"v{versionData.GetDocumentVersion()}";
+                        var itemIsLatestVersion = versionData.GetDocumentVersion() == statiqDocument.GetLatestVersion();
+                        var itemIsLatestDocumentVersion = versionData.GetDocumentVersion() == statiqDocument.GetLatestDocumentVersion();
+
+                        if ((highlightLatestVersion && itemIsLatestVersion) || (highlightLatestDocumentVersion && itemIsLatestDocumentVersion))
+                        {
+                            versionDisplayName += " (latest)";
+                        }
+
+                        <a class="dropdown-item" href="@versionData.GetDocumentReference()">@versionDisplayName</a>
+                    }
+                </div>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    Version: @documentVersion @((highlightLatestVersion && isLatestVersion) || (highlightLatestDocumentVersion && isLatestDocumentVersion) ? "(latest)" : "")
+                </a>
+            </li>
+        }
+    </ul>
+}

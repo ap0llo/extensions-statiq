@@ -1,0 +1,18 @@
+﻿@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>@statiqDocument.Get(DocsTemplateKeys.Title)</title>
+</head>
+<body>
+    @RenderBody()
+</body>
+</html>

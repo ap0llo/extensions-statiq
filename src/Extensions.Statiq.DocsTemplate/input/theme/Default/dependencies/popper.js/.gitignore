@@ -1,0 +1,4 @@
+# This is a placeholder folder. No files should be added here.
+# Files of "popper.js" will be placed here by "LibMan" (see libman.json)
+*
+!.gitignore

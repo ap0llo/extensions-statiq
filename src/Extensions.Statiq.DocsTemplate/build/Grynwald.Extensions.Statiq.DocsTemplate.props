@@ -1,0 +1,7 @@
+﻿<Project>
+
+    <ItemGroup>
+        <None Include="$(MSBuildThisFileDirectory)\input\theme\**\*.*"  CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    
+</Project>

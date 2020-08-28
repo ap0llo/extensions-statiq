@@ -1,0 +1,33 @@
+﻿@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="theme:assets/css/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="theme:assets/css/highlight.js/styles/default.min.css" />
+<link rel="stylesheet" href="theme:assets/css/site.css" />
+
+@{
+    var title = "";
+
+    var pageTitle = statiqDocument.GetString(DocsTemplateKeys.Title);
+    var siteName = statiqDocument.GetString(DocsTemplateKeys.SiteName);
+
+    if (!String.IsNullOrEmpty(pageTitle) && !String.IsNullOrEmpty(siteName))
+    {
+        title = $"{pageTitle} - {siteName}";
+    }
+    else if (!String.IsNullOrEmpty(pageTitle))
+    {
+        title = pageTitle;
+    }
+    else if (!String.IsNullOrEmpty(siteName))
+    {
+        title = siteName;
+    }
+}
+
+<title>@title</title>

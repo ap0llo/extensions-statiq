@@ -62,7 +62,7 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences
     /// </list>
     /// </para>
     /// </remarks>
-    public class GatherVersions : Module
+    public sealed class GatherVersions : Module
     {
         private Config<DocumentIdentity> m_Identity = Config.FromDocument(d => d.Get<DocumentIdentity>(DocumentReferenceKeys.DocumentIdentity));
 

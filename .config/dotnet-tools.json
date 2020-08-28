@@ -25,6 +25,12 @@
       "commands": [
         "reportgenerator"
       ]
+    },
+    "microsoft.web.librarymanager.cli": {
+      "version": "2.1.76",
+      "commands": [
+        "libman"
+      ]
     }
   }
 }

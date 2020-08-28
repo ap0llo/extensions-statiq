@@ -83,7 +83,12 @@ jobs:
   - task: CmdLine@2
     displayName: Restore NuGet packages
     inputs:
-      script: dotnet restore $(solutionPath) /warnaserror
+      script: dotnet restore $(solutionPath) /warnaserror  
+  - task: CmdLine@2
+    displayName: Restore Client-side libraries
+    inputs:
+      script: dotnet tool run libman -- restore
+      workingDirectory: src/Extensions.Statiq.DocsTemplate
   - task: DotNetCoreCLI@2
     displayName: Build
     inputs:

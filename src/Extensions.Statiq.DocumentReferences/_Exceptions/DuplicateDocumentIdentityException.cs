@@ -2,7 +2,7 @@
 
 namespace Grynwald.Extensions.Statiq.DocumentReferences
 {
-    public class DuplicateDocumentIdentityException : Exception
+    public sealed class DuplicateDocumentIdentityException : Exception
     {
         public DuplicateDocumentIdentityException(string? message) : base(message)
         { }

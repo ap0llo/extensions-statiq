@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="Statiq.App" Version="1.0.0-beta.19" />
+        <PackageReference Include="Statiq.Yaml" Version="1.0.0-beta.19" />
+        <PackageReference Include="Statiq.Markdown" Version="1.0.0-beta.19" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Extensions.Statiq.DocsTemplate\Grynwald.Extensions.Statiq.DocsTemplate.csproj" />
+      <ProjectReference Include="..\Extensions.Statiq.DocumentReferences\Grynwald.Extensions.Statiq.DocumentReferences.csproj" />
+      <ProjectReference Include="..\Extensions.Statiq.Git\Grynwald.Extensions.Statiq.Git.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,47 @@
+﻿@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @{
+        await Html.RenderPartialAsync("./_head.cshtml");
+    }
+</head>
+<body>
+
+    <header>
+        @{
+            await Html.RenderPartialAsync("./_navbar.cshtml");
+        }
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 content">
+                    @RenderBody()
+                </div>
+                <div class="col-md-2">
+                    @{
+                        await Html.RenderPartialAsync("./_toc.cshtml");
+                    }
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        @{
+            await Html.RenderPartialAsync("./_footer.cshtml");
+        }
+    </footer>
+    @{
+        await Html.RenderPartialAsync("./_scripts.cshtml");
+    }
+
+</body>
+</html>

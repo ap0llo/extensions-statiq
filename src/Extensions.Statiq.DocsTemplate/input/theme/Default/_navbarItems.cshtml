@@ -1,0 +1,46 @@
+﻿@using System.Linq;
+@using Statiq.Common;
+@using Grynwald.Extensions.Statiq.DocsTemplate;
+
+@{
+    var statiqDocument = ViewData.GetStatiqDocument();
+    var navbarItems = statiqDocument.Get<IEnumerable<IMetadata>>(DocsTemplateKeys.NavbarItems);
+    var showNavbarItems = statiqDocument.GetBool(DocsTemplateKeys.ShowNavbarItems, defaultValue: true);
+}
+
+@if (showNavbarItems && navbarItems != null && navbarItems.Any())
+{
+    <ul class="navbar-nav" id="navbarItems">
+        @foreach (var navItem in navbarItems)
+        {
+            var navTitle = navItem.GetString(DocsTemplateKeys.Title);
+            var navValue = navItem.GetString(DocsTemplateKeys.Link);
+            var childNavbarItems = navItem.Get<IEnumerable<IMetadata>>(DocsTemplateKeys.NavbarItems);
+
+            if (!String.IsNullOrWhiteSpace(navTitle))
+            {
+                if (navValue != null)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" href="@navValue">@navTitle</a>
+                    </li>
+                }
+                else if (childNavbarItems != null && childNavbarItems.Any())
+                {
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @navTitle
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            @foreach (var childNavItem in childNavbarItems)
+                            {
+                                <a class="dropdown-item" href="@childNavItem.GetString(DocsTemplateKeys.Link)">@childNavItem.GetString(DocsTemplateKeys.Title)</a>
+                            }
+                        </div>
+                    </li>
+                }
+            }
+        }
+    </ul>
+}
+

@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "highlight.js@10.1.1",
+      "files": [ "highlight.min.js", "styles/default.min.css" ],
+      "destination": "input/theme/Default/dependencies/highlight.js/"
+    },
+    {
+      "library": "jquery@3.5.1",
+      "files": [ "jquery.min.js" ],
+      "destination": "input/theme/Default/dependencies/jquery/"
+    },
+    {
+      "library": "popper.js@1.16.0",
+      "files": [ "popper.min.js" ],
+      "destination": "input/theme/Default/dependencies/popper.js/"
+    },
+    {
+      "library": "twitter-bootstrap@4.5.2",
+      "files": [ "js/bootstrap.min.js", "css/bootstrap.min.css" ],
+      "destination": "input/theme/Default/dependencies/bootstrap/"
+    },
+    {
+      "library": "mermaid@8.7.0",
+      "files": ["mermaid.min.js"],
+      "destination": "input/theme/Default/dependencies/mermaid/"
+    }
+  ]
+}

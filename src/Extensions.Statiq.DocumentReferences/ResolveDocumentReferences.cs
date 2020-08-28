@@ -25,8 +25,8 @@ namespace Grynwald.Extensions.Statiq.DocumentReferences
     /// To generated links between the documents' source path, set <see cref="ResolutionMode"/> to <see cref="LinkResolutionMode.Source"/> using <see cref="WithResolutionMode(LinkResolutionMode)"/>.
     /// </para>
     /// </remarks>
-    /// <seealso cref="SetDocsIdentity"/>
-    public class ResolveDocumentReferences : Module
+    /// <seealso cref="SetDocumentReferenceMetadata"/>
+    public sealed class ResolveDocumentReferences : Module
     {
         private Config<DocumentIdentity> m_Identity = Config.FromDocument(d => d.Get<DocumentIdentity>(DocumentReferenceKeys.DocumentIdentity));
 

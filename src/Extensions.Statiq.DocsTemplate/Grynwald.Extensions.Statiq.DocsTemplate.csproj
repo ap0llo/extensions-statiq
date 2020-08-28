@@ -16,7 +16,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="input\theme\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+        <None Remove="input\theme\**\*.*" />
+        <None Include="input\theme\**\*.*" Exclude="input\theme\**\.gitignore" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="build\$(TargetFramework)\input\theme\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="build\Grynwald.Extensions.Statiq.DocsTemplate.props"
+              Pack="true" PackagePath="build\$(TargetFramework)\$(PackageId).props" />
     </ItemGroup>
 
 </Project>

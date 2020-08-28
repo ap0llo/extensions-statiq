@@ -35,7 +35,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             using var repository = new Repository(m_WorkingDirectory);
             var blob = (Blob)repository.Head.Tip.Tree.First(x => x.Name == "file1.txt").Target;
 
-            Action act = () => new GitFileInfo(name, new GitDirectoryInfo(repository.Head.Tip.Tree), blob);
+            Action act = () => new GitFileInfo(name, new GitDirectoryInfo(repository.Head.Tip), blob);
             act.Should().Throw<ArgumentException>();
         }
 
@@ -59,7 +59,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         {
             using var repository = new Repository(m_WorkingDirectory);
 
-            Action act = () => new GitFileInfo("file", new GitDirectoryInfo(repository.Head.Tip.Tree), null!);
+            Action act = () => new GitFileInfo("file", new GitDirectoryInfo(repository.Head.Tip), null!);
             act.Should().Throw<ArgumentNullException>();
         }
 
@@ -74,7 +74,7 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
 
             using var repository = new Repository(m_WorkingDirectory);
             var blob = (Blob)repository.Head.Tip.Tree.First(x => x.Name == "file1.txt").Target;
-            var sut = new GitFileInfo("file1.txt", new GitDirectoryInfo(repository.Head.Tip.Tree), blob);
+            var sut = new GitFileInfo("file1.txt", new GitDirectoryInfo(repository.Head.Tip), blob);
 
             // ACT
             using var contentStream = sut.GetContentStream();

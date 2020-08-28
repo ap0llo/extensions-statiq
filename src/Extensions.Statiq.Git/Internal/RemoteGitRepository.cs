@@ -8,7 +8,6 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 {
     public class RemoteGitRepository : IGitRepository
     {
-        private readonly string m_RemoteUrl;
         private TemporaryDirectory? m_RepositoryDirectory;
         private LocalGitRepository? m_LocalRepository;
 
@@ -22,7 +21,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
                     // clone repository into a new temporary directory
                     m_RepositoryDirectory?.Dispose();
                     m_RepositoryDirectory = new TemporaryDirectory();
-                    Repository.Clone(m_RemoteUrl, m_RepositoryDirectory, new CloneOptions() { IsBare = true });
+                    Repository.Clone(Url, m_RepositoryDirectory, new CloneOptions() { IsBare = true });
 
                     // create all remote branches as local branches
                     using var repository = new Repository(m_RepositoryDirectory);
@@ -50,6 +49,9 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             }
         }
 
+
+        public string Url { get; }
+
         public string? RepositoryDirectory => m_RepositoryDirectory?.FullName;
 
         public RepositoryKind Kind => RepositoryKind.Remote;
@@ -66,7 +68,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             if (String.IsNullOrWhiteSpace(remoteUrl))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(remoteUrl));
 
-            m_RemoteUrl = remoteUrl;
+            Url = remoteUrl;
         }
 
 

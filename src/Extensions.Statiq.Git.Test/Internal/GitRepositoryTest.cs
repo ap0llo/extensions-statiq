@@ -189,8 +189,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             _ = GitCommit(allowEmtpy: true);
             var commit3 = GitCommit(allowEmtpy: true);
 
-            Git($"tag my-tag-1 {commit1}");
-            Git($"tag my-tag-2 {commit3}");
+            var tag1 = GitTag("my-tag-1", commit1);
+            var tag2 = GitTag("my-tag-2", commit3);
 
             using var sut = CreateInstance(m_WorkingDirectory);
 
@@ -201,8 +201,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
             tags
                 .Should().NotBeNull()
                 .And.HaveCount(2)
-                .And.Contain(new GitTag("my-tag-1", commit1))
-                .And.Contain(new GitTag("my-tag-2", commit3));
+                .And.Contain(tag1)
+                .And.Contain(tag2);
         }
 
     }

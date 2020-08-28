@@ -7,12 +7,12 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 {
     public class LocalGitRepository : IGitRepository
     {
-        private readonly string m_RepositoryPath;
         private readonly Lazy<Repository> m_Repository;
 
 
         private Repository Repository => m_Repository.Value;
 
+        public string Url { get; }
 
         public RepositoryKind Kind => RepositoryKind.Local;
 
@@ -34,41 +34,31 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             }
         }
 
-        public IEnumerable<GitTag> Tags => Repository.Tags.Select(tag => new GitTag(tag.FriendlyName, ToGitId(tag.Target)));
+        public IEnumerable<GitTag> Tags => Repository.Tags.Select(tag => new GitTag(tag.FriendlyName, tag.Target.GetGitId()));
+
 
         public LocalGitRepository(string repositoryPath)
         {
             if (String.IsNullOrWhiteSpace(repositoryPath))
                 throw new ArgumentException("Value must not be null or whitespace", nameof(repositoryPath));
 
-            m_RepositoryPath = repositoryPath;
-            m_Repository = new Lazy<Repository>(() => new Repository(m_RepositoryPath));
+            Url = repositoryPath;
+            m_Repository = new Lazy<Repository>(() => new Repository(Url));
         }
 
 
-        public GitId GetHeadCommitId(string branchName)
-        {
-            var commit = Repository.Branches[branchName].Tip;
-            return ToGitId(commit);
-        }
+        public GitId GetHeadCommitId(string branchName) => Repository.Branches[branchName].Tip.GetGitId();
 
         public GitDirectoryInfo GetRootDirectory(GitId commitId)
         {
             var commit = Repository.Lookup<Commit>(commitId.Id);
-            return new GitDirectoryInfo(commit.Tree);
+            return new GitDirectoryInfo(commit);
         }
 
         public void Dispose()
         {
             if (m_Repository.IsValueCreated)
                 m_Repository.Value.Dispose();
-        }
-
-
-        private GitId ToGitId(GitObject gitObject)
-        {
-            var sha = Repository.ObjectDatabase.ShortenObjectId(gitObject);
-            return new GitId(sha);
         }
     }
 }

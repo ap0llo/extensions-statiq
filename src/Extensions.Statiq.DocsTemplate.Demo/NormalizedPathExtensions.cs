@@ -6,7 +6,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Demo
 
     internal static class NormalizedPathExtensions
     {
-        internal static NormalizedPath GetRelativePathFrom(this NormalizedPath path, NormalizedPath from) => from.GetRelativePath(path);
+        internal static NormalizedPath GetPathRelativeTo(this NormalizedPath path, NormalizedPath from) => from.GetRelativePath(path);
 
         internal static NormalizedPath Prepend(this NormalizedPath path, string prefix) => new NormalizedPath(prefix) / path;
     }

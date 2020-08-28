@@ -45,7 +45,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Demo
                 new SetDestination(Config.FromDocument(document =>
                 {
                     return document.GetGitRelativePath()
-                        .GetRelativePathFrom("docs")
+                        .GetPathRelativeTo("docs")
                         .Prepend($"v{document.GetDocumentVersion()}")
                         .ChangeExtension(".html");
                 })),

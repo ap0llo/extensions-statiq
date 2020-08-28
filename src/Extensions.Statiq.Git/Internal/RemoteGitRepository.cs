@@ -58,6 +58,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
 
         public IEnumerable<string> Branches => LocalRepository.Branches;
 
+        public IEnumerable<GitTag> Tags => LocalRepository.Tags;
 
 
         public RemoteGitRepository(string remoteUrl)

@@ -34,6 +34,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
             }
         }
 
+        public IEnumerable<GitTag> Tags => Repository.Tags.Select(tag => new GitTag(tag.FriendlyName, ToGitId(tag.Target)));
 
         public LocalGitRepository(string repositoryPath)
         {
@@ -48,8 +49,7 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         public GitId GetHeadCommitId(string branchName)
         {
             var commit = Repository.Branches[branchName].Tip;
-            var id = Repository.ObjectDatabase.ShortenObjectId(commit);
-            return new GitId(id);
+            return ToGitId(commit);
         }
 
         public GitDirectoryInfo GetRootDirectory(GitId commitId)
@@ -65,5 +65,10 @@ namespace Grynwald.Extensions.Statiq.Git.Internal
         }
 
 
+        private GitId ToGitId(GitObject gitObject)
+        {
+            var sha = Repository.ObjectDatabase.ShortenObjectId(gitObject);
+            return new GitId(sha);
+        }
     }
 }

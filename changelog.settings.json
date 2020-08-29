@@ -20,6 +20,10 @@
             {
                 "name": "github",
                 "displayName": "GitHub Integration"
+            },
+            {
+                "name": "gitlab",
+                "displayName": "GitLab Integration"
             }
         ]
     }

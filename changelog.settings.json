@@ -16,6 +16,10 @@
             {
                 "name": "docstemplate",
                 "displayName": "Docs Template"
+            },
+            {
+                "name": "github",
+                "displayName": "GitHub Integration"
             }
         ]
     }

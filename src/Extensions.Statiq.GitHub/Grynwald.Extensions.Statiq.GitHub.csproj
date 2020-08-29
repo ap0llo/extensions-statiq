@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Statiq.Common" Version="1.0.0-beta.19" />
+        <PackageReference Include="Octokit" Version="0.48.0" />
+    </ItemGroup>
+
+</Project>

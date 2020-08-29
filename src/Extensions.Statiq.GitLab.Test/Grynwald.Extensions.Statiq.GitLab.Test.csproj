@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Extensions.Statiq.GitHub\Grynwald.Extensions.Statiq.GitHub.csproj" />
-      <ProjectReference Include="..\Extensions.Statiq.TestHelpers\Grynwald.Extensions.Statiq.TestHelpers.csproj" />
+        <ProjectReference Include="..\Extensions.Statiq.GitLab\Grynwald.Extensions.Statiq.GitLab.csproj" />
+        <ProjectReference Include="..\Extensions.Statiq.TestHelpers\Grynwald.Extensions.Statiq.TestHelpers.csproj" />
     </ItemGroup>
 
 </Project>

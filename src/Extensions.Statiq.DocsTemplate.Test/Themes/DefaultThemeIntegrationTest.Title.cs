@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using FluentAssertions;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;

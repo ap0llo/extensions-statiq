@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Testing;
 
@@ -11,7 +12,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="ConvertSourceLinksToDestinationLinks"/>
     /// </summary>
-    public class ConvertSourceLinksToDestinationLinksTest : BaseFixture
+    public class ConvertSourceLinksToDestinationLinksTest : TestBase
     {
         [Test]
         // Relative links

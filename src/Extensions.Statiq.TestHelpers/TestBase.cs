@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
 
-namespace Grynwald.Extensions.Statiq.Git.Test
+namespace Grynwald.Extensions.Statiq.TestHelpers
 {
     public abstract class TestBase
     {

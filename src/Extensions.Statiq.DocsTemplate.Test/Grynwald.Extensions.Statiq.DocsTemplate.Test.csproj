@@ -21,6 +21,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Extensions.Statiq.DocsTemplate\Grynwald.Extensions.Statiq.DocsTemplate.csproj" />
+        <ProjectReference Include="..\Extensions.Statiq.TestHelpers\Grynwald.Extensions.Statiq.TestHelpers.csproj" />
     </ItemGroup>
 
 </Project>

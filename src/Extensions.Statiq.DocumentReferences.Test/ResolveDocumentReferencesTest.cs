@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocumentReferences.Model;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using Microsoft.Extensions.Logging;
 using NuGet.Versioning;
 using NUnit.Framework;

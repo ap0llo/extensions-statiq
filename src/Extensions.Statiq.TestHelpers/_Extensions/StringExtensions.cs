@@ -1,11 +1,11 @@
 ﻿using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 
-namespace Grynwald.Extensions.Statiq.DocsTemplate.Test
+namespace Grynwald.Extensions.Statiq.TestHelpers
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
-        internal static IHtmlDocument ParseAsHtml(this string content)
+        public static IHtmlDocument ParseAsHtml(this string content)
         {
             var htmlDocument = new HtmlParser().Parse(content);
             return htmlDocument;

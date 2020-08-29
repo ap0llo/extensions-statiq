@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -12,7 +13,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="ReadDirectoryMetadataFromInputFiles"/>
     /// </summary>
-    public class ReadDirectoryMetadataFromInputFilesTest : BaseFixture
+    public class ReadDirectoryMetadataFromInputFilesTest : TestBase
     {
         [Test]
         public async Task Execute_returns_input_document_if_no_metadata_files_are_found()

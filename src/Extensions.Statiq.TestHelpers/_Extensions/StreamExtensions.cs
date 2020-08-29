@@ -1,10 +1,8 @@
 ﻿using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
-namespace Grynwald.Extensions.Statiq.Git
+namespace Grynwald.Extensions.Statiq.TestHelpers
 {
-    internal static class StreamExtensions
+    public static class StreamExtensions
     {
         public static string ReadAsString(this Stream stream)
         {

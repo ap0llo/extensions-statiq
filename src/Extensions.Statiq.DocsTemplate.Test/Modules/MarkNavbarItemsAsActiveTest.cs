@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -11,7 +12,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="MarkNavbarItemsAsActive"/>
     /// </summary>
-    public class MarkNavbarItemsAsActiveTest : BaseFixture
+    public class MarkNavbarItemsAsActiveTest : TestBase
     {
         [Test]
         // Base tests cases: All values of LinkMode, simple source or destination

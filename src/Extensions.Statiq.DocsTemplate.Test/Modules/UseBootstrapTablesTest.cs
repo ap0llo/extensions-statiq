@@ -2,6 +2,7 @@
 using AngleSharp.Dom.Html;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -11,7 +12,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="UseBootstrapTables"/>
     /// </summary>
-    public class UseBootstrapTablesTest : BaseFixture
+    public class UseBootstrapTablesTest : TestBase
     {
         [Test]
         public async Task Module_Adds_table_tag()

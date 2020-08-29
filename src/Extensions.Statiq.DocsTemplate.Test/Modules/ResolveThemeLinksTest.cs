@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AngleSharp.Dom.Html;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -12,7 +13,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="ResolveThemeLinks"/>
     /// </summary>
-    public class ResolveThemeLinksTest : BaseFixture
+    public class ResolveThemeLinksTest : TestBase
     {
         [TestCase("theme:unknown-page")]
         public async Task Execute_leaves_unresolvable_theme_links_unchanged(string themeLink)

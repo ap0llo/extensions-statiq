@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Grynwald.Extensions.Statiq.Git.Internal;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using Grynwald.Utilities.IO;
 using NUnit.Framework;
 

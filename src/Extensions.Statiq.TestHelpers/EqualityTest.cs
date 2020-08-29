@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace Grynwald.Extensions.Statiq.Git.Test.Internal
+namespace Grynwald.Extensions.Statiq.TestHelpers
 {
     public interface IEqualityTestDataProvider<TTestee>
     {

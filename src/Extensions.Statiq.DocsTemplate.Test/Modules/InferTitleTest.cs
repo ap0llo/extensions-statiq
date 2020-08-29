@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -10,7 +11,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="InferTitle"/>
     /// </summary>
-    public class InferTitleTest : BaseFixture
+    public class InferTitleTest : TestBase
     {
         [Test]
         public async Task Title_is_null_if_document_has_no_heading()

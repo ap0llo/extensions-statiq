@@ -5,6 +5,7 @@ using AngleSharp.Dom.Html;
 using ApprovalTests;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using Statiq.App;
 using Statiq.Common;
 using Statiq.Core;

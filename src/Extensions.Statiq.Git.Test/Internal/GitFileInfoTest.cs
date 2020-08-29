@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using LibGit2Sharp;
 using NUnit.Framework;
 

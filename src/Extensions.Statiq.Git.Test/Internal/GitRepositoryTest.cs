@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.Git.Internal;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 
 namespace Grynwald.Extensions.Statiq.Git.Test.Internal

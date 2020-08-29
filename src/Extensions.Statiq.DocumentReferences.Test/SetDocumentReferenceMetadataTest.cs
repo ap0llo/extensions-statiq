@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocumentReferences.Model;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NuGet.Versioning;
 using NUnit.Framework;
 using Statiq.Common;

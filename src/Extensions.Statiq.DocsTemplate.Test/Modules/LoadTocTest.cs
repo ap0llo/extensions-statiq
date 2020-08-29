@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
+using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;
 using Statiq.Common;
 using Statiq.Testing;
@@ -12,7 +13,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Test.Modules
     /// <summary>
     /// Tests for <see cref="LoadToc"/>
     /// </summary>
-    public class LoadTocTest : BaseFixture
+    public class LoadTocTest : TestBase
     {
         [Test]
         [TestCase("<h2>Heading Text</h2>", "Heading Text", null)]

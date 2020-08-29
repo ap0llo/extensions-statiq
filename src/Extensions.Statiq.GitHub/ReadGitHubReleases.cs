@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Octokit;
 using Statiq.Common;
 
 namespace Grynwald.Extensions.Statiq.GitHub
@@ -113,7 +107,6 @@ namespace Grynwald.Extensions.Statiq.GitHub
             var client = clientFactory.CreateClient(hostName, accessToken);
 
             var releases = await client.Repository.Release.GetAll(owner, repositoryName);
-
 
             return await releases.ParallelSelectAsync(async release =>
             {

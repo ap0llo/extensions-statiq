@@ -10,7 +10,7 @@ namespace Grynwald.Extensions.Statiq.TestHelpers
 {
     public abstract class TestBase
     {
-        protected TestExecutionContext m_TestExecutionContext = null!;
+        protected TestExecutionContext m_TestExecutionContext = null!; // set in SetUp which is called by NUnit before test execution
 
         [SetUp]
         public virtual void SetUp()

@@ -13,10 +13,10 @@
         <PackageReference Include="Grynwald.Utilities" Version="1.6.51-pre" />
         <PackageReference Include="FluentAssertions" Version="5.10.3" />
         <PackageReference Include="ApprovalTests" Version="5.4.2" />
-        <PackageReference Include="Statiq.App" Version="1.0.0-beta.21" />
-        <PackageReference Include="Statiq.Testing" Version="1.0.0-beta.21" />
-        <PackageReference Include="Statiq.Html" Version="1.0.0-beta.21" />
-        <PackageReference Include="Statiq.Yaml" Version="1.0.0-beta.21" />
+        <PackageReference Include="Statiq.App" Version="1.0.0-beta.22" />
+        <PackageReference Include="Statiq.Testing" Version="1.0.0-beta.22" />
+        <PackageReference Include="Statiq.Html" Version="1.0.0-beta.22" />
+        <PackageReference Include="Statiq.Yaml" Version="1.0.0-beta.22" />
     </ItemGroup>
 
     <ItemGroup>

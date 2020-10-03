@@ -7,9 +7,9 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Statiq.App" Version="1.0.0-beta.21" />
-        <PackageReference Include="Statiq.Yaml" Version="1.0.0-beta.21" />
-        <PackageReference Include="Statiq.Markdown" Version="1.0.0-beta.21" />
+        <PackageReference Include="Statiq.App" Version="1.0.0-beta.22" />
+        <PackageReference Include="Statiq.Yaml" Version="1.0.0-beta.22" />
+        <PackageReference Include="Statiq.Markdown" Version="1.0.0-beta.22" />
     </ItemGroup>
 
 

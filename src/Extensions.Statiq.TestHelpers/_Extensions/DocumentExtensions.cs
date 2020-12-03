@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using Statiq.Common;
 
 namespace Grynwald.Extensions.Statiq.TestHelpers

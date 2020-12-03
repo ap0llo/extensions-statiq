@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using ApprovalTests;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;

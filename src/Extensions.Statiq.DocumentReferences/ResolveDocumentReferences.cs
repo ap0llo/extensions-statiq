@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using Grynwald.Extensions.Statiq.DocumentReferences.Model;
 using Microsoft.Extensions.Logging;
 using Statiq.Common;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using Statiq.Common;
 using Statiq.Html;
 
@@ -36,7 +36,7 @@ namespace Grynwald.Extensions.Statiq.DocsTemplate.Modules
 
         protected override async Task<IEnumerable<IDocument>> ExecuteInputAsync(IDocument input, IExecutionContext context)
         {
-            var html = await input.ParseHtmlAsync(context);
+            var html = await HtmlHelper.ParseHtmlAsync(input);
 
             if (html is null)
             {

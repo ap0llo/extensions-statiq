@@ -1,5 +1,5 @@
-﻿using AngleSharp.Dom.Html;
-using AngleSharp.Parser.Html;
+﻿using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
 
 namespace Grynwald.Extensions.Statiq.TestHelpers
 {
@@ -7,7 +7,7 @@ namespace Grynwald.Extensions.Statiq.TestHelpers
     {
         public static IHtmlDocument ParseAsHtml(this string content)
         {
-            var htmlDocument = new HtmlParser().Parse(content);
+            var htmlDocument = new HtmlParser().ParseDocument(content);
             return htmlDocument;
         }
     }

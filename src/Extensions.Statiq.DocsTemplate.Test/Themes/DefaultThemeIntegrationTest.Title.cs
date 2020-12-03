@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.TestHelpers;
 using NUnit.Framework;

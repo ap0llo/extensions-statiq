@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Dom.Html;
+using AngleSharp.Html.Dom;
 using FluentAssertions;
 using Grynwald.Extensions.Statiq.DocsTemplate.Modules;
 using Grynwald.Extensions.Statiq.TestHelpers;

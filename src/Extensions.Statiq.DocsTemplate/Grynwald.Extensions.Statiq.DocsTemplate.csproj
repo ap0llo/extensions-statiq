@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Statiq.Core" Version="1.0.0-beta.23" />
-        <PackageReference Include="Statiq.Razor" Version="1.0.0-beta.23" />
-        <PackageReference Include="Statiq.Html" Version="1.0.0-beta.23" />
+        <PackageReference Include="Statiq.Core" Version="1.0.0-beta.31" />
+        <PackageReference Include="Statiq.Razor" Version="1.0.0-beta.31" />
+        <PackageReference Include="Statiq.Html" Version="1.0.0-beta.31" />
         <PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.113" />
     </ItemGroup>
 

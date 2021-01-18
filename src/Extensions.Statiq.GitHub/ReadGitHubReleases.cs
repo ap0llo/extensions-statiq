@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Statiq.Common;
 
@@ -108,7 +109,7 @@ namespace Grynwald.Extensions.Statiq.GitHub
 
             var releases = await client.Repository.Release.GetAll(owner, repositoryName);
 
-            return await releases.ParallelSelectAsync(async release =>
+            return releases.Select(release =>
             {
                 var metadata = new Dictionary<string, object>()
                 {
@@ -124,7 +125,7 @@ namespace Grynwald.Extensions.Statiq.GitHub
                     metadata.Add(GitHubKeys.GitHubReleasePublishedAt, release.PublishedAt.Value.UtcDateTime);
                 }
 
-                var contentProvider = await context.GetContentProviderAsync(content: release.Body, mediaType: MediaTypes.Markdown);
+                var contentProvider = context.GetContentProvider(content: release.Body, mediaType: MediaTypes.Markdown);
                 return context.CreateDocument(metadata, contentProvider);
             });
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Grynwald.Extensions.Statiq.Git.Internal;
@@ -314,11 +315,13 @@ namespace Grynwald.Extensions.Statiq.Git
                 metadata.Add(GitKeys.GitTag, tagName);
 
             using var stream = file.GetContentStream();
+            var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
 
             return context.CreateDocument(
                 source: placeholderSourcePath,
                 destination: placeholderDestinationPath,
-                stream: stream)
+                stream: memoryStream)
             .Clone(metadata);
         }
     }

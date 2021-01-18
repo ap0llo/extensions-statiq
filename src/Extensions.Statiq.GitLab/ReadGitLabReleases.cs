@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GitLabApiClient.Internal.Paths;
 using Statiq.Common;
@@ -113,7 +114,7 @@ namespace Grynwald.Extensions.Statiq.GitLab
 
             var releases = await client.Releases.GetAsync((ProjectId)$"{projectNamespace}/{projectName}");
 
-            return await releases.ParallelSelectAsync(async release =>
+            return releases.Select(release =>
             {
                 var metadata = new Dictionary<string, object>()
                 {
@@ -127,8 +128,8 @@ namespace Grynwald.Extensions.Statiq.GitLab
                 }
 
                 var contentProvider = outputFormat == OutputFormat.Html
-                    ? await context.GetContentProviderAsync(content: release.DescriptionHtml, mediaType: MediaTypes.Html)
-                    : await context.GetContentProviderAsync(content: release.Description, mediaType: MediaTypes.Markdown);
+                    ? context.GetContentProvider(content: release.DescriptionHtml, mediaType: MediaTypes.Html)
+                    : context.GetContentProvider(content: release.Description, mediaType: MediaTypes.Markdown);
 
                 return context.CreateDocument(metadata, contentProvider);
             });

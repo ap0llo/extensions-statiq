@@ -33,7 +33,8 @@ namespace Grynwald.Extensions.Statiq.Git.Test.Internal
         public void Constructor_throws_ArgumentException_if_input_is_not_a_valid_git_object_id(string id)
         {
             var ex = Assert.Throws<ArgumentException>(() => new GitId(id));
-            Assert.AreEqual("id", ex.ParamName);
+            Assert.NotNull(ex);
+            Assert.AreEqual("id", ex!.ParamName);
         }
     }
 }

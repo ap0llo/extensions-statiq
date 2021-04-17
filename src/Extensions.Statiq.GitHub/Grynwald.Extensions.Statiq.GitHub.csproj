@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Statiq.Common" Version="1.0.0-beta.38" />
+        <PackageReference Include="Statiq.Common" Version="1.0.0-beta.40" />
         <PackageReference Include="Octokit" Version="0.50.0" />
     </ItemGroup>
 
